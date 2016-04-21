@@ -36,7 +36,7 @@ function bloom_register_client() {
 			'args'         => array( 'orderby' => 'term_order' ),
 			'rewrite'      => array( 'slug' => 'client' ),
 			'capabilities' => array( 'assign_terms' => 'edit_posts' ),
-			'meta_box_cb'  => 'bloom_client_metabox',
+			//'meta_box_cb'  => 'bloom_client_metabox',
 		)
 	);
 }
