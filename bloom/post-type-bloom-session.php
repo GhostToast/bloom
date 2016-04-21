@@ -27,7 +27,7 @@ function bloom_register_session() {
 			'has_archive' => true,
 			'rewrite'     => array( 'slug' => 'sessions' ),
 			'menu_icon'   => 'dashicons-carrot',
-			'supports'    => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'revisions', 'comments' ),
+			'supports'    => array( 'title', 'editor' ),
 		)
 	);
 }
