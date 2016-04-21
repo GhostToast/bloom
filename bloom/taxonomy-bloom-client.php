@@ -80,9 +80,10 @@ function bloom_client_edit_term_meta_fields() {
 		$insurance_customer_service_phone = get_term_meta( $term_id, 'insurance_customer_service_phone', true );
 		$insurance_benefit_information = get_term_meta( $term_id, 'insurance_benefit_information', true );
 		?>
-
-		<!-- Client Name -->
 		<tr><td colspan="2"><div><hr /></div></td></tr>
+
+		<!-- Information -->
+		<tr><th scope="row" valign="top" colspan="2"><div><h2>Information</h2></div></th></tr>
 		<tr>
 			<th scope="row" valign="top">First Name:</th>
 			<td>
@@ -107,9 +108,42 @@ function bloom_client_edit_term_meta_fields() {
 				</div>
 			</td>
 		</tr>
+		<tr>
+			<th scope="row" valign="top">Date of Birth:</th>
+			<td>
+				<div>
+					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Phone (required):</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" placeholder="" required/>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Alternate Phone:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_phone_2" value="<?php echo esc_html( $client_phone_2 ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Email:</th>
+			<td>
+				<div>
+					<input type="email" class="regular-text" name="client_email" value="<?php echo esc_html( $client_email ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
 		<tr><td colspan="2"><div><hr /></div></td></tr>
 
 		<!-- Address -->
+		<tr><th scope="row" valign="top" colspan="2"><div><h2>Address</h2></div></th></tr>
 		<tr>
 			<th scope="row" valign="top">Address 1:</th>
 			<td>
@@ -204,40 +238,84 @@ function bloom_client_edit_term_meta_fields() {
 		</tr>
 		<tr><td colspan="2"><div><hr /></div></td></tr>
 
-		<!-- Phone, DOB -->
+		<!-- Emergency -->
+		<tr><th scope="row" valign="top" colspan="2"><div><h2>Emergency</h2></div></th></tr>
 		<tr>
-			<th scope="row" valign="top">Date of Birth:</th>
+			<th scope="row" valign="top">Emergency Name:</th>
 			<td>
 				<div>
-					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" placeholder="" />
+					<input type="text" class="regular-text" name="emergency_name" value="<?php echo esc_html( $emergency_name ); ?>" placeholder="" />
 				</div>
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top">Phone (required):</th>
+			<th scope="row" valign="top">Emergency Phone:</th>
 			<td>
 				<div>
-					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" placeholder="" required/>
+					<input type="text" class="regular-text" name="emergency_phone" value="<?php echo esc_html( $emergency_phone ); ?>" placeholder="" />
 				</div>
 			</td>
 		</tr>
-		<tr>
-			<th scope="row" valign="top">Alternate Phone:</th>
-			<td>
-				<div>
-					<input type="text" class="regular-text" name="client_phone_2" value="<?php echo esc_html( $client_phone_2 ); ?>" placeholder="" />
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th scope="row" valign="top">Email:</th>
-			<td>
-				<div>
-					<input type="email" class="regular-text" name="client_email" value="<?php echo esc_html( $client_email ); ?>" placeholder="" />
-				</div>
-			</td>
-		</tr>
+		<tr><td colspan="2"><div><hr /></div></td></tr>
 
+		<!-- Insurance -->
+		<tr><th scope="row" valign="top" colspan="2"><div><h2>Insurance</h2></div></th></tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Provider:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_provider" value="<?php echo esc_html( $insurance_provider ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Group #:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_group_number" value="<?php echo esc_html( $insurance_group_number ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Member ID:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_member_id" value="<?php echo esc_html( $insurance_member_id ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Policy Holder Name:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_policy_holder_name" value="<?php echo esc_html( $insurance_policy_holder_name ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Policy Holder Date of Birth:</th>
+			<td>
+				<div>
+					<input type="date" class="regular-text" name="insurance_policy_holder_dob" value="<?php echo esc_html( $insurance_policy_holder_dob ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Customer Service Phone:</th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_customer_service_phone" value="<?php echo esc_html( $insurance_customer_service_phone ); ?>" placeholder="" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top">Insurance Benefit Information:</th>
+			<td>
+				<div>
+					<textarea cols="80" rows="10" name="insurance_benefit_information"><?php echo esc_html( $insurance_benefit_information ); ?></textarea>
+				</div>
+			</td>
+		</tr>
 		<tr><td colspan="2"><div><hr /></div></td></tr>
 
 	<?php endif;
