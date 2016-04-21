@@ -7,8 +7,9 @@
 /**
  * Register Session Post Type.
  */
-function bloom_register_session() {
-	register_post_type( 'bloom-session',
+function bloom_register_session_post_type() {
+	register_post_type(
+		'bloom-session',
 		array(
 			'labels'      => array(
 				'name'               => 'Sessions',
@@ -26,9 +27,9 @@ function bloom_register_session() {
 			'public'      => true,
 			'has_archive' => true,
 			'rewrite'     => array( 'slug' => 'sessions' ),
-			'menu_icon'   => 'dashicons-carrot',
+			'menu_icon'   => 'dashicons-clock',
 			'supports'    => array( 'title', 'editor' ),
 		)
 	);
 }
-add_action( 'init', 'bloom_register_session' );
+add_action( 'init', 'bloom_register_session_post_type' );
