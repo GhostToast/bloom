@@ -44,7 +44,7 @@ add_action( 'init', 'bloom_register_client_post_type' );
 function bloom_client_change_title_text( $title ) {
 	$screen = get_current_screen();
 	if ( 'bloom-client' === $screen->post_type ) {
-		$title = 'Enter name here';
+		$title = '';
 	}
 	return $title;
 }
@@ -52,7 +52,6 @@ add_filter( 'enter_title_here', 'bloom_client_change_title_text' );
 
 /**
  * Adds metabox(es) for Post.
- * @TODO: https://ttmm.io/tech/wordpress-shadow-taxonomies/
  */
 function bloom_client_add_meta_boxes() {
 	// Information.
@@ -137,14 +136,6 @@ function bloom_client_information_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="client_dob">Date of Birth:</label></th>
-			<td>
-				<div>
-					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" autocomplete="off" />
-				</div>
-			</td>
-		</tr>
-		<tr>
 			<th scope="row" valign="top"><label for="client_phone_1">Phone (required):</label></th>
 			<td>
 				<div>
@@ -165,6 +156,14 @@ function bloom_client_information_metabox( $post ) {
 			<td>
 				<div>
 					<input type="email" class="regular-text" name="client_email" value="<?php echo esc_html( $client_email ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_dob">Date of Birth:</label></th>
+			<td>
+				<div>
+					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>

@@ -10,16 +10,21 @@
  * Copy the compiled name values to the post_title field.
  */
 function clientTitleCopier() {
-	var $titleTextInput = $( "#title" ),
+	var $titleTextInput = $( "body.post-type-bloom-client #title" ),
 		$fName = $( "#client_first_name" ),
 		$mName = $( "#client_middle_name" ),
 		$lName = $( "#client_last_name" ),
 		$nameFields = $( ".js-client-title" );
 
-	$titleTextInput.prop( "disabled", true );
+	// Our placeholder.
+	if ( ! $titleTextInput.val() ) {
+		$titleTextInput.val( "Enter name below" );
+	}
 
-	$nameFields.on( 'keyup', function() {
-		var newTitle = '';
+	$titleTextInput.css("color", "rgba(51, 51, 51, 0.5)").prop( "readonly", true );
+
+	$nameFields.on( "keyup", function() {
+		var newTitle = "";
 		// First.
 		if ( $fName.val() ) {
 			newTitle = $fName.val();
