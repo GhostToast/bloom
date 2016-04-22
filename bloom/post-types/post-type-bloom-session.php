@@ -85,10 +85,10 @@ function bloom_session_details_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="session_date">Session Date:</label></th>
+			<th scope="row" valign="top"><label for="session_date">Session Date:<br><span style="font-weight:normal;font-style:italic;">Required</span></label></th>
 			<td>
 				<div>
-					<input type="date" class="regular-text js-session-title" name="session_date" id="session_date" value="<?php echo esc_html( $session_date ); ?>" autocomplete="off" />
+					<input type="date" class="regular-text js-session-title" name="session_date" id="session_date" value="<?php echo esc_html( $session_date ); ?>" autocomplete="off" required />
 				</div>
 			</td>
 		</tr>
@@ -128,6 +128,10 @@ function bloom_session_details_metabox( $post ) {
 	<?php
 }
 
+/**
+ * Bloom Session Notes metabox.
+ * @param $post
+ */
 function bloom_session_notes_metabox( $post ) {
 	wp_nonce_field( 'bloom_session_notes_metabox', 'bloom_session_notes_nonce' );
 	$session_notes = get_post_meta( $post->ID, 'session_notes', true );

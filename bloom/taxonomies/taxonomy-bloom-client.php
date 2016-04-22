@@ -13,7 +13,7 @@ function bloom_client_register_taxonomy() {
 		'_bloom-client',
 		'bloom-session',
 		array(
-			'label'         => 'Client',
+			'label'         => 'Client (Required)',
 			'sort'          => true,
 			'rewrite'       => false,
 			'show_in_menu'  => false,
@@ -33,6 +33,7 @@ add_action( 'init', 'bloom_client_register_taxonomy' );
  * @param $box
  */
 function bloom_client_taxonomy_metabox( $post, $box ) {
+	echo '<form>';
 	wp_nonce_field( 'bloom_client_taxonomy_metabox', 'bloom_client_taxonomy_nonce' );
 	$terms = get_terms( array( 'taxonomy' => '_bloom-client', 'hide_empty' => false, 'orderby' => 'term_id' ) );
 	$client_terms = wp_get_object_terms( $post->ID, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
@@ -50,7 +51,7 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 	}
 
 	if ( ! empty( $terms ) ) {
-		echo '<select name="_bloom-client" id="_bloom-client-dropdown" class="js-session-title">';
+		echo '<select name="_bloom-client" id="_bloom-client-dropdown" class="js-session-title" required>';
 		echo '<option value="">-- Please select</option>';
 		foreach ( $terms as $term ) {
 			$client = get_post( $term->name );
@@ -71,7 +72,7 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 		$format_string,
 		esc_url( admin_url( '/post-new.php?post_type=bloom-client' ) )
 	);
-
+	echo '</form>';
 }
 
 /**
