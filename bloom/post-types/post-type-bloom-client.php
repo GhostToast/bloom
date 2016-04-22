@@ -9,7 +9,7 @@
  */
 function bloom_register_client_post_type() {
 	register_post_type(
-		'_bloom-client',
+		'bloom-client',
 		array(
 			'labels'      => array(
 				'name'               => 'Clients',
@@ -43,7 +43,7 @@ add_action( 'init', 'bloom_register_client_post_type' );
  */
 function bloom_client_change_title_text( $title ) {
 	$screen = get_current_screen();
-	if ( '_bloom-client' === $screen->post_type ) {
+	if ( 'bloom-client' === $screen->post_type ) {
 		$title = 'Enter name here';
 	}
 	return $title;
@@ -60,7 +60,7 @@ function bloom_client_add_meta_boxes() {
 		'bloom_client_information_metabox',
 		'Information',
 		'bloom_client_information_metabox',
-		'_bloom-client',
+		'bloom-client',
 		'advanced',
 		'default'
 	);
@@ -70,7 +70,7 @@ function bloom_client_add_meta_boxes() {
 		'bloom_client_address_metabox',
 		'Address',
 		'bloom_client_address_metabox',
-		'_bloom-client',
+		'bloom-client',
 		'advanced',
 		'default'
 	);
@@ -80,7 +80,7 @@ function bloom_client_add_meta_boxes() {
 		'bloom_client_emergency_metabox',
 		'Emergency',
 		'bloom_client_emergency_metabox',
-		'_bloom-client',
+		'bloom-client',
 		'advanced',
 		'default'
 	);
@@ -90,7 +90,7 @@ function bloom_client_add_meta_boxes() {
 		'bloom_client_insurance_metabox',
 		'Insurance',
 		'bloom_client_insurance_metabox',
-		'_bloom-client',
+		'bloom-client',
 		'advanced',
 		'default'
 	);
@@ -443,5 +443,56 @@ function bloom_client_save_meta( $post_id ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 	}
+
+	// If we can't retrieve the client, don't create a term
+	$client = get_post( $post_id );
+	if ( null === $client || 'Auto Draft' === $client->post_title ) {
+		return;
+	}
+
+	// If the client term already exists, don't create a term.
+	$term = get_term_by( 'name', $post_id, '_bloom-client' );
+	if ( false === $term ) {
+		// Create the term
+		wp_insert_term( $post_id, '_bloom-client' );
+	}
 }
-add_action( 'save_post__bloom-client', 'bloom_client_save_meta' );
+add_action( 'save_post_bloom-client', 'bloom_client_save_meta' );
+
+/**
+ * Remove a term from the shadow taxonomy upon post delete.
+ *
+ * @uses get_post_type()
+ * @uses get_post()
+ * @uses get_term_by()
+ * @uses wp_delete_term()
+ *
+ * @const DOING_AUTOSAVE
+ *
+ * @param int $post_id
+ */
+function bloom_client_delete_shadow_term( $post_id ) {
+	// If we're running an auto-save, don't delete a term
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	// If we're not working with a client, don't delete a term
+	if ( 'bloom-client' !== get_post_type( $post_id ) ) {
+		return;
+	}
+
+	// If we can't retrieve the client, don't delete a term
+	$client = get_post( $post_id );
+	if ( null === $client ) {
+		return;
+	}
+
+	// If the client term doesn't exist, there's nothing to delete
+	$term = get_term_by( 'name', $post_id, '_bloom-client' );
+	if ( false !== $term ) {
+		// Delete the term
+		wp_delete_term( $term->term_id, '_bloom-client' );
+	}
+}
+add_action( 'before_delete_post', 'bloom_client_delete_shadow_term' );

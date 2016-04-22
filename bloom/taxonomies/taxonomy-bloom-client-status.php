@@ -11,7 +11,7 @@
 function bloom_client_status_taxonomy() {
 	register_taxonomy(
 		'bloom-client-status',
-		'_bloom-client',
+		'bloom-client',
 		array(
 			'label'              => 'Status',
 			'public'             => true,
@@ -97,7 +97,7 @@ function bloom_client_save_status( $post_id ) {
 		wp_set_object_terms( $post_id, $term->term_id, 'bloom-client-status', false );
 	}
 }
-add_action( 'save_post__bloom-client', 'bloom_client_save_status' );
+add_action( 'save_post_bloom-client', 'bloom_client_save_status' );
 
 /**
  * Filter by taxonomy terms (admin screen).
@@ -105,7 +105,7 @@ add_action( 'save_post__bloom-client', 'bloom_client_save_status' );
 function bloom_client_status_admin_filter() {
 	global $typenow;
 
-	if ( '_bloom-client' === $typenow ) {
+	if ( 'bloom-client' === $typenow ) {
 		$tax_slug = 'bloom-client-status';
 
 		$tax_obj  = get_taxonomy( $tax_slug );
