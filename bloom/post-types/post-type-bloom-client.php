@@ -497,15 +497,20 @@ function bloom_client_delete_shadow_term( $post_id ) {
 add_action( 'before_delete_post', 'bloom_client_delete_shadow_term' );
 
 /**
- * Add Extra columns: Last Name.
+ * Add Extra columns: Last Name. In the order we wish.
  * @param $columns
  *
  * @return mixed
  */
 function bloom_client_extra_columns( $columns ) {
-	$columns['client_last_name'] = 'Last Name';
-
-	return $columns;
+	$return_columns = array();
+	foreach ( $columns as $key => $value ) {
+		if ( 'date' === $key ) {
+			$return_columns['client_last_name'] = 'Last Name';
+		}
+		$return_columns[ $key ] = $value;
+	}
+	return $return_columns;
 }
 add_filter( 'manage_edit-bloom-client_columns', 'bloom_client_extra_columns' );
 
