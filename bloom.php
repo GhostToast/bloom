@@ -4,9 +4,10 @@
  * @package bloom
  */
 
-include_once( 'bloom/taxonomy-bloom-client.php' );
-include_once( 'bloom/post-type-bloom-client.php' );
-include_once( 'bloom/post-type-bloom-session.php' );
+include_once( 'bloom/post-types/post-type-bloom-client.php' );
+include_once( 'bloom/post-types/post-type-bloom-session.php' );
+include_once( 'bloom/taxonomies/taxonomy-bloom-client.php' );
+include_once( 'bloom/taxonomies/taxonomy-bloom-client-status.php' );
 
 /**
  * Remove unnecessary items from Admin Menu.
