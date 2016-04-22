@@ -29,7 +29,7 @@ function bloom_register_client_post_type() {
 			'has_archive' => true,
 			'rewrite'     => array( 'slug' => 'clients' ),
 			'menu_icon'   => 'dashicons-heart',
-			'supports'    => array( 'title', 'editor' ),
+			'supports'    => array( 'title' ),
 		)
 	);
 }
@@ -116,7 +116,7 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_first_name">First Name:</label></th>
 			<td>
 				<div>
-					<input type="text" class="regular-text" name="client_first_name" size="36" value="<?php echo esc_html( $client_first_name ); ?>" autocomplete="off" />
+					<input type="text" class="regular-text js-client-title" name="client_first_name" id="client_first_name" size="36" value="<?php echo esc_html( $client_first_name ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -124,7 +124,7 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_middle_name">Middle:</label></th>
 			<td>
 				<div>
-					<input type="text" class="small-text" name="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" autocomplete="off" />
+					<input type="text" class="small-text js-client-title" name="client_middle_name" id="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -132,7 +132,7 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_last_name">Last Name (required):</label></th>
 			<td>
 				<div>
-					<input type="text" class="regular-text" name="client_last_name" size="36" value="<?php echo esc_html( $client_last_name ); ?>" autocomplete="off" required/>
+					<input type="text" class="regular-text js-client-title" name="client_last_name" id="client_last_name" size="36" value="<?php echo esc_html( $client_last_name ); ?>" autocomplete="off" required/>
 				</div>
 			</td>
 		</tr>

@@ -4,6 +4,11 @@
  * @package bloom
  */
 
+// Bloom Folder URL.
+if ( ! defined( 'BLOOM_PLUGIN_URL' ) ) {
+	define( 'BLOOM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+}
+
 include_once( 'bloom/post-types/post-type-bloom-client.php' );
 include_once( 'bloom/post-types/post-type-bloom-session.php' );
 include_once( 'bloom/taxonomies/taxonomy-bloom-client.php' );
@@ -35,3 +40,12 @@ function bloom_remove_admin_bar_menu_items() {
 	$wp_admin_bar->remove_node( 'new-user' );
 }
 add_action( 'admin_bar_menu', 'bloom_remove_admin_bar_menu_items', 999 );
+
+/**
+ * Enqueue admin scripts for Bloom.
+ */
+function bloom_enqueue_admin_js() {
+	wp_enqueue_media();
+	wp_enqueue_script( 'bloom-admin', BLOOM_PLUGIN_URL . 'bloom/assets/js/bloom-admin.js', array( 'jquery' ) );
+}
+add_action( 'admin_enqueue_scripts', 'bloom_enqueue_admin_js' );
