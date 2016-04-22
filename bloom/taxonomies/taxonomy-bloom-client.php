@@ -35,16 +35,16 @@ add_action( 'init', 'bloom_client_register_taxonomy' );
 function bloom_client_taxonomy_metabox( $post, $box ) {
 	wp_nonce_field( 'bloom_client_taxonomy_metabox', 'bloom_client_taxonomy_nonce' );
 	$terms = get_terms( array( 'taxonomy' => '_bloom-client', 'hide_empty' => false, 'orderby' => 'term_id' ) );
-	$client_term = wp_get_object_terms( $post->ID, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
+	$client_terms = wp_get_object_terms( $post->ID, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
 
 	// See if `bcid` was provided - a method to set this Session from an client view.
-	if ( empty( $client_term ) ) {
+	if ( empty( $client_terms ) ) {
 		$bcid = filter_input( INPUT_GET, 'bcid', FILTER_CALLBACK, array( 'options' => 'absint' ) );
-		$client_term = wp_get_object_terms( $bcid, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
+		$client_terms[0] = get_term_by( 'name', $bcid, '_bloom-client' );
 	}
 
-	if ( isset( $client_term[0] ) && isset( $client_term[0]->term_id ) ) {
-		$current = $client_term[0]->term_id;
+	if ( isset( $client_terms[0] ) && isset( $client_terms[0]->term_id ) ) {
+		$current = $client_terms[0]->term_id;
 	} else {
 		$current = false;
 	}

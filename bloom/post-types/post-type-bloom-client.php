@@ -550,3 +550,28 @@ function bloom_client_last_name_sortable_pre_get_post( $query ) {
 	}
 }
 add_action( 'pre_get_posts', 'bloom_client_last_name_sortable_pre_get_post' );
+
+/**
+ * Add quick link.
+ * @param         $actions
+ * @param WP_Post $post
+ *
+ * @return mixed
+ */
+function bloom_client_row_actions( $actions, WP_Post $post ) {
+	if ( 'bloom-client' !== $post->post_type ) {
+		return $actions;
+	}
+
+	// Remove quick edit.
+	unset( $actions['inline hide-if-no-js'] );
+
+	// Add "Add new Session" link.
+	$actions['bloom_client_new_session'] = sprintf(
+		'<a href="%1$s">%2$s</a>',
+		esc_url( admin_url( "/post-new.php?post_type=bloom-session&bcid={$post->ID}" ) ),
+		'New Session'
+	);
+	return $actions;
+}
+add_filter( 'post_row_actions', 'bloom_client_row_actions', 10, 2 );
