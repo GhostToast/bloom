@@ -36,139 +36,167 @@ add_action( 'init', 'bloom_register_client_post_type' );
 
 /**
  * Adds metabox(es) for Post.
+ * @TODO: https://ttmm.io/tech/wordpress-shadow-taxonomies/
  */
 function bloom_client_add_meta_boxes() {
-	// Thumbnail Image. Goes in Sidebar.
+	// Information.
 	add_meta_box(
-		'slc_thumbnail_metabox',
-		'',
-		'bloom_client_render_metabox',
-		'bloom-client'
+		'bloom_client_information_metabox',
+		'Information',
+		'bloom_client_information_metabox',
+		'_bloom-client',
+		'advanced',
+		'default'
+	);
+
+	// Address.
+	add_meta_box(
+		'bloom_client_address_metabox',
+		'Address',
+		'bloom_client_address_metabox',
+		'_bloom-client',
+		'advanced',
+		'default'
+	);
+
+	// Emergency.
+	add_meta_box(
+		'bloom_client_emergency_metabox',
+		'Emergency',
+		'bloom_client_emergency_metabox',
+		'_bloom-client',
+		'advanced',
+		'default'
+	);
+
+	// Insurance.
+	add_meta_box(
+		'bloom_client_insurance_metabox',
+		'Insurance',
+		'bloom_client_insurance_metabox',
+		'_bloom-client',
+		'advanced',
+		'default'
 	);
 }
 add_action( 'add_meta_boxes', 'bloom_client_add_meta_boxes' );
 
-function bloom_client_render_metabox( $post_id ) {
-	$client_first_name  = get_post_meta( $post_id, 'client_first_name', true );
-	$client_middle_name = get_post_meta( $post_id, 'client_middle_name', true );
-	$client_last_name   = get_post_meta( $post_id, 'client_last_name', true );
+/**
+ * Client Information metabox.
+ * @param $post
+ */
+function bloom_client_information_metabox( $post ) {
+	wp_nonce_field( 'bloom_client_information_metabox', 'bloom_client_information_nonce' );
+	$client_first_name  = get_post_meta( $post->ID, 'client_first_name', true );
+	$client_middle_name = get_post_meta( $post->ID, 'client_middle_name', true );
+	$client_last_name   = get_post_meta( $post->ID, 'client_last_name', true );
+	$client_dob         = get_post_meta( $post->ID, 'client_dob', true );
+	$client_phone_1     = get_post_meta( $post->ID, 'client_phone_1', true );
+	$client_phone_2     = get_post_meta( $post->ID, 'client_phone_2', true );
+	$client_email       = get_post_meta( $post->ID, 'client_email', true );
+	?>
+	<table class="form-table">
+		<tr>
+			<th scope="row" valign="top"><label for="client_first_name">First Name:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_first_name" size="36" value="<?php echo esc_html( $client_first_name ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_middle_name">Middle:</label></th>
+			<td>
+				<div>
+					<input type="text" class="small-text" name="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_last_name">Last Name (required):</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_last_name" size="36" value="<?php echo esc_html( $client_last_name ); ?>" autocomplete="off" required/>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_dob">Date of Birth:</label></th>
+			<td>
+				<div>
+					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_phone_1">Phone (required):</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" required/>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_phone_2">Alternate Phone:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_phone_2" value="<?php echo esc_html( $client_phone_2 ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_email">Email:</label></th>
+			<td>
+				<div>
+					<input type="email" class="regular-text" name="client_email" value="<?php echo esc_html( $client_email ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
 
-	$client_address_street_1 = get_post_meta( $post_id, 'client_address_street_1', true );
-	$client_address_street_2 = get_post_meta( $post_id, 'client_address_street_2', true );
-	$client_address_city     = get_post_meta( $post_id, 'client_address_city', true );
-	$client_address_state    = get_post_meta( $post_id, 'client_address_state', true );
-	$client_address_zip      = get_post_meta( $post_id, 'client_address_zip', true );
+/**
+ * Client Address metabox.
+ * @param $post
+ */
+function bloom_client_address_metabox( $post ) {
+	wp_nonce_field( 'bloom_client_address_metabox', 'bloom_client_address_nonce' );
+	$client_address_street_1 = get_post_meta( $post->ID, 'client_address_street_1', true );
+	$client_address_street_2 = get_post_meta( $post->ID, 'client_address_street_2', true );
+	$client_address_city     = get_post_meta( $post->ID, 'client_address_city', true );
+	$client_address_state    = get_post_meta( $post->ID, 'client_address_state', true );
+	$client_address_zip      = get_post_meta( $post->ID, 'client_address_zip', true );
 	if ( empty( $client_address_state ) ) {
 		$client_address_state = 'IL';
-	}
-
-	$client_dob     = get_post_meta( $post_id, 'client_dob', true );
-	$client_phone_1 = get_post_meta( $post_id, 'client_phone_1', true );
-	$client_phone_2 = get_post_meta( $post_id, 'client_phone_2', true );
-	$client_email   = get_post_meta( $post_id, 'client_email', true );
-
-	$emergency_name  = get_post_meta( $post_id, 'emergency_name', true );
-	$emergency_phone = get_post_meta( $post_id, 'emergency_phone', true );
-
-	$insurance_provider               = get_post_meta( $post_id, 'insurance_provider', true );
-	$insurance_group_number           = get_post_meta( $post_id, 'insurance_group_number', true );
-	$insurance_member_id              = get_post_meta( $post_id, 'insurance_member_id', true );
-	$insurance_policy_holder_name     = get_post_meta( $post_id, 'insurance_policy_holder_name', true );
-	$insurance_policy_holder_dob      = get_post_meta( $post_id, 'insurance_policy_holder_dob', true );
-	$insurance_customer_service_phone = get_post_meta( $post_id, 'insurance_customer_service_phone', true );
-	$insurance_benefit_information    = get_post_meta( $post_id, 'insurance_benefit_information', true );
-	?>
-
-	<tr><td colspan="2"><div><hr /></div></td></tr>
-
-	<!-- Information -->
-	<tr><th scope="row" valign="top" colspan="2"><div><h2>Information</h2></div></th></tr>
+	} ?>
+	<table class="form-table">
 	<tr>
-		<th scope="row" valign="top">First Name:</th>
+		<th scope="row" valign="top"><label for="client_address_street_1">Address 1:</label></th>
 		<td>
 			<div>
-				<input type="text" class="regular-text" name="client_first_name" size="36" value="<?php echo esc_html( $client_first_name ); ?>" placeholder="John" />
+				<input type="text" class="regular-text" name="client_address_street_1" size="36" value="<?php echo esc_html( $client_address_street_1 ); ?>" autocomplete="off" />
 			</div>
 		</td>
 	</tr>
 	<tr>
-		<th scope="row" valign="top">Middle:</th>
+		<th scope="row" valign="top"><label for="client_address_street_2">Address 2:</label></th>
 		<td>
 			<div>
-				<input type="text" class="small-text" name="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" placeholder="" />
+				<input type="text" class="regular-text" name="client_address_street_2" size="36" value="<?php echo esc_html( $client_address_street_2 ); ?>" autocomplete="off" />
 			</div>
 		</td>
 	</tr>
 	<tr>
-		<th scope="row" valign="top">Last Name (required):</th>
+		<th scope="row" valign="top"><label for="client_address_city">City:</label></th>
 		<td>
 			<div>
-				<input type="text" class="regular-text" name="client_last_name" size="36" value="<?php echo esc_html( $client_last_name ); ?>" placeholder="Smith" required/>
+				<input type="text" class="regular-text" name="client_address_city" size="36" value="<?php echo esc_html( $client_address_city ); ?>" autocomplete="off" />
 			</div>
 		</td>
 	</tr>
 	<tr>
-		<th scope="row" valign="top">Date of Birth:</th>
-		<td>
-			<div>
-				<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Phone (required):</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" placeholder="" required/>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Alternate Phone:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="client_phone_2" value="<?php echo esc_html( $client_phone_2 ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Email:</th>
-		<td>
-			<div>
-				<input type="email" class="regular-text" name="client_email" value="<?php echo esc_html( $client_email ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr><td colspan="2"><div><hr /></div></td></tr>
-
-	<!-- Address -->
-	<tr><th scope="row" valign="top" colspan="2"><div><h2>Address</h2></div></th></tr>
-	<tr>
-		<th scope="row" valign="top">Address 1:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="client_address_street_1" size="36" value="<?php echo esc_html( $client_address_street_1 ); ?>" placeholder="123 Elm Street" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Address 2:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="client_address_street_2" size="36" value="<?php echo esc_html( $client_address_street_2 ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">City:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="client_address_city" size="36" value="<?php echo esc_html( $client_address_city ); ?>" placeholder="Sycamore" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">State:</th>
+		<th scope="row" valign="top"><label for="client_address_state">State:</label></th>
 		<td>
 			<div>
 				<select name="client_address_state">
@@ -228,93 +256,173 @@ function bloom_client_render_metabox( $post_id ) {
 		</td>
 	</tr>
 	<tr>
-		<th scope="row" valign="top">Zip:</th>
+		<th scope="row" valign="top"><label for="client_address_zip">Zip:</label></th>
 		<td>
 			<div>
-				<input type="text" class="regular-text" name="client_address_zip" value="<?php echo esc_html( $client_address_zip ); ?>" placeholder="60178" />
+				<input type="text" class="regular-text" name="client_address_zip" value="<?php echo esc_html( $client_address_zip ); ?>" autocomplete="off" />
 			</div>
 		</td>
 	</tr>
-	<tr><td colspan="2"><div><hr /></div></td></tr>
-
-	<!-- Emergency -->
-	<tr><th scope="row" valign="top" colspan="2"><div><h2>Emergency</h2></div></th></tr>
-	<tr>
-		<th scope="row" valign="top">Emergency Name:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="emergency_name" value="<?php echo esc_html( $emergency_name ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Emergency Phone:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="emergency_phone" value="<?php echo esc_html( $emergency_phone ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr><td colspan="2"><div><hr /></div></td></tr>
-
-	<!-- Insurance -->
-	<tr><th scope="row" valign="top" colspan="2"><div><h2>Insurance</h2></div></th></tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Provider:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="insurance_provider" value="<?php echo esc_html( $insurance_provider ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Group #:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="insurance_group_number" value="<?php echo esc_html( $insurance_group_number ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Member ID:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="insurance_member_id" value="<?php echo esc_html( $insurance_member_id ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Policy Holder Name:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="insurance_policy_holder_name" value="<?php echo esc_html( $insurance_policy_holder_name ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Policy Holder Date of Birth:</th>
-		<td>
-			<div>
-				<input type="date" class="regular-text" name="insurance_policy_holder_dob" value="<?php echo esc_html( $insurance_policy_holder_dob ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Customer Service Phone:</th>
-		<td>
-			<div>
-				<input type="text" class="regular-text" name="insurance_customer_service_phone" value="<?php echo esc_html( $insurance_customer_service_phone ); ?>" placeholder="" />
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th scope="row" valign="top">Insurance Benefit Information:</th>
-		<td>
-			<div>
-				<textarea cols="80" rows="10" name="insurance_benefit_information"><?php echo esc_html( $insurance_benefit_information ); ?></textarea>
-			</div>
-		</td>
-	</tr>
-	<tr><td colspan="2"><div><hr /></div></td></tr>
+	</table>
 	<?php
 }
+
+/**
+ * Client Emergency metabox.
+ * @param $post
+ */
+function bloom_client_emergency_metabox( $post ) {
+	wp_nonce_field( 'bloom_client_emergency_metabox', 'bloom_client_emergency_nonce' );
+	$emergency_name  = get_post_meta( $post->ID, 'emergency_name', true );
+	$emergency_phone = get_post_meta( $post->ID, 'emergency_phone', true );
+	?>
+	<table class="form-table">
+		<tr>
+			<th scope="row" valign="top"><label for="emergency_name">Emergency Name:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="emergency_name" value="<?php echo esc_html( $emergency_name ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="emergency_phone">Emergency Phone:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="emergency_phone" value="<?php echo esc_html( $emergency_phone ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
+
+/**
+ * Client Insurance metabox.
+ * @param $post
+ */
+function bloom_client_insurance_metabox( $post ) {
+	wp_nonce_field( 'bloom_client_insurance_metabox', 'bloom_client_insurance_nonce' );
+	$insurance_provider               = get_post_meta( $post->ID, 'insurance_provider', true );
+	$insurance_group_number           = get_post_meta( $post->ID, 'insurance_group_number', true );
+	$insurance_member_id              = get_post_meta( $post->ID, 'insurance_member_id', true );
+	$insurance_policy_holder_name     = get_post_meta( $post->ID, 'insurance_policy_holder_name', true );
+	$insurance_policy_holder_dob      = get_post_meta( $post->ID, 'insurance_policy_holder_dob', true );
+	$insurance_customer_service_phone = get_post_meta( $post->ID, 'insurance_customer_service_phone', true );
+	$insurance_benefit_information    = get_post_meta( $post->ID, 'insurance_benefit_information', true );
+	?>
+	<table class="form-table">
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_provider">Insurance Provider:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_provider" value="<?php echo esc_html( $insurance_provider ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_group_number">Insurance Group #:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_group_number" value="<?php echo esc_html( $insurance_group_number ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_member_id">Insurance Member ID:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_member_id" value="<?php echo esc_html( $insurance_member_id ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_policy_holder_name">Insurance Policy Holder Name:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_policy_holder_name" value="<?php echo esc_html( $insurance_policy_holder_name ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_policy_holder_dob">Insurance Policy Holder Date of Birth:</label></th>
+			<td>
+				<div>
+					<input type="date" class="regular-text" name="insurance_policy_holder_dob" value="<?php echo esc_html( $insurance_policy_holder_dob ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_customer_service_phone">Insurance Customer Service Phone:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="insurance_customer_service_phone" value="<?php echo esc_html( $insurance_customer_service_phone ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="insurance_benefit_information">Insurance Benefit Information:</label></th>
+			<td>
+				<div>
+					<textarea cols="80" rows="10" name="insurance_benefit_information"><?php echo esc_html( $insurance_benefit_information ); ?></textarea>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
+
+/**
+ * Save client post meta.
+ *
+ * @param int    $post_id ID of post.
+ */
+function bloom_client_save_meta( $post_id ) {
+	$sanitized_inputs = array();
+
+	$nonce = filter_input( INPUT_POST, 'bloom_client_information_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_client_information_metabox' ) ) {
+		$sanitized_inputs['client_first_name']  = filter_input( INPUT_POST, 'client_first_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_middle_name'] = filter_input( INPUT_POST, 'client_middle_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_last_name']   = filter_input( INPUT_POST, 'client_last_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_dob']         = filter_input( INPUT_POST, 'client_dob', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_phone_1']     = filter_input( INPUT_POST, 'client_phone_1', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_phone_2']     = filter_input( INPUT_POST, 'client_phone_2', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_email']       = filter_input( INPUT_POST, 'client_email', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+	}
+
+	$nonce = filter_input( INPUT_POST, 'bloom_client_address_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_client_address_metabox' ) ) {
+		$sanitized_inputs['client_address_street_1'] = filter_input( INPUT_POST, 'client_address_street_1', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_address_street_2'] = filter_input( INPUT_POST, 'client_address_street_2', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_address_city']     = filter_input( INPUT_POST, 'client_address_city', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_address_state']    = filter_input( INPUT_POST, 'client_address_state', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_address_zip']      = filter_input( INPUT_POST, 'client_address_zip', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+	}
+
+	$nonce = filter_input( INPUT_POST, 'bloom_client_emergency_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_client_emergency_metabox' ) ) {
+		$sanitized_inputs['emergency_name']  = filter_input( INPUT_POST, 'emergency_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['emergency_phone'] = filter_input( INPUT_POST, 'emergency_phone', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+	}
+
+	$nonce = filter_input( INPUT_POST, 'bloom_client_insurance_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_client_insurance_metabox' ) ) {
+		$sanitized_inputs['insurance_provider']               = filter_input( INPUT_POST, 'insurance_provider', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_group_number']           = filter_input( INPUT_POST, 'insurance_group_number', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_member_id']              = filter_input( INPUT_POST, 'insurance_member_id', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_policy_holder_name']     = filter_input( INPUT_POST, 'insurance_policy_holder_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_policy_holder_dob']      = filter_input( INPUT_POST, 'insurance_policy_holder_dob', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_customer_service_phone'] = filter_input( INPUT_POST, 'insurance_customer_service_phone', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_benefit_information']    = filter_input( INPUT_POST, 'insurance_benefit_information', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+	}
+
+	foreach ( $sanitized_inputs as $key => $value ) {
+		if ( empty( $value ) ) {
+			delete_post_meta( $post_id, $key );
+		} else {
+			update_post_meta( $post_id, $key, $value );
+		}
+	}
+}
+add_action( 'save_post__bloom-client', 'bloom_client_save_meta' );
