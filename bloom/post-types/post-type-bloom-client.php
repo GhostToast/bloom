@@ -394,6 +394,9 @@ function bloom_client_insurance_metabox( $post ) {
  * @param int    $post_id ID of post.
  */
 function bloom_client_save_meta( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
 	$sanitized_inputs = array();
 
 	$nonce = filter_input( INPUT_POST, 'bloom_client_information_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
