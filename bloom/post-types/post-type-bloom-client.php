@@ -51,7 +51,7 @@ function bloom_client_change_title_text( $title ) {
 add_filter( 'enter_title_here', 'bloom_client_change_title_text' );
 
 /**
- * Adds metabox(es) for Post.
+ * Adds metabox(es) for Client.
  */
 function bloom_client_add_meta_boxes() {
 	// Information.

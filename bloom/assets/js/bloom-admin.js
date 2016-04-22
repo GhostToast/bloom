@@ -6,52 +6,87 @@
 
 ( function( $ ) {
 
-/**
- * Copy the compiled name values to the post_title field.
- */
-function clientTitleCopier() {
-	var $titleTextInput = $( "body.post-type-bloom-client #title" ),
-		$fName = $( "#client_first_name" ),
-		$mName = $( "#client_middle_name" ),
-		$lName = $( "#client_last_name" ),
-		$nameFields = $( ".js-client-title" );
+	/**
+	 * Copy the compiled name values to the post_title field.
+	 */
+	function clientTitleCopier() {
+		var $clientTitleTextInput = $( "body.post-type-bloom-client #title" ),
+			$fName = $( "#client_first_name" ),
+			$mName = $( "#client_middle_name" ),
+			$lName = $( "#client_last_name" ),
+			$nameFields = $( ".js-client-title" );
 
-	// Our placeholder.
-	if ( ! $titleTextInput.val() ) {
-		$titleTextInput.val( "Enter name below" );
+		// Our placeholder.
+		if ( ! $clientTitleTextInput.val() ) {
+			$clientTitleTextInput.val( "Enter name below" );
+		}
+
+		$clientTitleTextInput.css("color", "rgba(51, 51, 51, 0.5)").prop( "readonly", true );
+
+		$nameFields.on( "keyup", function() {
+			var newTitle = "";
+			// First.
+			if ( $fName.val() ) {
+				newTitle = $fName.val();
+			}
+			// Middle.
+			if ( $mName.val() ) {
+				if ( newTitle ) {
+					newTitle = newTitle + " ";
+				}
+				newTitle = newTitle + $mName.val();
+			}
+			// Last.
+			if ( $lName.val() ) {
+				if ( newTitle ) {
+					newTitle = newTitle + " ";
+				}
+				newTitle = newTitle + $lName.val();
+			}
+			$clientTitleTextInput.val( newTitle );
+		} );
 	}
 
-	$titleTextInput.css("color", "rgba(51, 51, 51, 0.5)").prop( "readonly", true );
+	/**
+	 * Copy the compiled name values to the post_title field.
+	 */
+	function sessionTitleCopier() {
+		var $sessionTitleTextInput = $( "body.post-type-bloom-session #title" ),
+			$sessionDate = $( "#session_date" ),
+			$clientDropdown = $( "#_bloom-client-dropdown" ),
+			$titleElements = $( ".js-session-title" );
 
-	$nameFields.on( "keyup", function() {
-		var newTitle = "";
-		// First.
-		if ( $fName.val() ) {
-			newTitle = $fName.val();
+		// Our placeholder.
+		if ( ! $sessionTitleTextInput.val() ) {
+			$sessionTitleTextInput.val( "Choose client and date below" );
 		}
-		// Middle.
-		if ( $mName.val() ) {
-			if ( newTitle ) {
-				newTitle = newTitle + " ";
+
+		$sessionTitleTextInput.css("color", "rgba(51, 51, 51, 0.5)").prop( "readonly", true );
+
+		$titleElements.on( "change", function() {
+			var newTitle = "";
+			// Client Name.
+			if ( $clientDropdown.val() ) {
+				newTitle = $clientDropdown.find( ":selected" ).text();
 			}
-			newTitle = newTitle + $mName.val();
-		}
-		// Last.
-		if ( $lName.val() ) {
-			if ( newTitle ) {
-				newTitle = newTitle + " ";
+			// Date.
+			if ( $sessionDate.val() ) {
+				if ( newTitle ) {
+					newTitle = newTitle + " - ";
+				}
+				newTitle = newTitle + $sessionDate.val();
 			}
-			newTitle = newTitle + $lName.val();
-		}
-		$titleTextInput.val( newTitle );
-	} );
-}
+
+			$sessionTitleTextInput.val( newTitle );
+		} );
+	}
 
 	/**
 	 * Run all of our bits here.
 	 */
 	$( document ).ready( function() {
 		clientTitleCopier();
+		sessionTitleCopier();
 	} );
 
 } )( jQuery );

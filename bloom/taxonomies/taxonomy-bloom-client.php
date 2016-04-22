@@ -50,7 +50,7 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 	}
 
 	if ( ! empty( $terms ) ) {
-		echo '<select name="_bloom-client">';
+		echo '<select name="_bloom-client" id="_bloom-client-dropdown" class="js-session-title">';
 		echo '<option value="">-- Please select</option>';
 		foreach ( $terms as $term ) {
 			$client = get_post( $term->name );
