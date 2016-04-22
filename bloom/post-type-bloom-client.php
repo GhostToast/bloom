@@ -18,6 +18,7 @@ function bloom_register_client_post_type() {
 				'search_items'       => 'Search Clients',
 				'all_items'          => 'All Clients',
 				'edit_item'          => 'Edit Client',
+				'view_item'          => 'View Client',
 				'update_item'        => 'Update Client',
 				'add_new_item'       => 'Add Client',
 				'new_item_name'      => 'New Client',
@@ -33,6 +34,21 @@ function bloom_register_client_post_type() {
 	);
 }
 add_action( 'init', 'bloom_register_client_post_type' );
+
+/**
+ * Change "Enter Title Here" to something more appropriate.
+ * @param $title
+ *
+ * @return string
+ */
+function bloom_client_change_title_text( $title ) {
+	$screen = get_current_screen();
+	if ( '_bloom-client' === $screen->post_type ) {
+		$title = 'Enter name here';
+	}
+	return $title;
+}
+add_filter( 'enter_title_here', 'bloom_client_change_title_text' );
 
 /**
  * Adds metabox(es) for Post.
