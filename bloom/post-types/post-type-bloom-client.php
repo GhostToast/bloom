@@ -495,3 +495,53 @@ function bloom_client_delete_shadow_term( $post_id ) {
 	}
 }
 add_action( 'before_delete_post', 'bloom_client_delete_shadow_term' );
+
+/**
+ * Add Extra columns: Last Name.
+ * @param $columns
+ *
+ * @return mixed
+ */
+function bloom_client_extra_columns( $columns ) {
+	$columns['client_last_name'] = 'Last Name';
+
+	return $columns;
+}
+add_filter( 'manage_edit-bloom-client_columns', 'bloom_client_extra_columns' );
+
+/**
+ * Fill out extra column content: Last Name.
+ * @param $column_name
+ * @param $post_id
+ */
+function bloom_client_last_name_column_content( $column_name, $post_id ) {
+	if ( 'client_last_name' !== $column_name ) {
+		return;
+	}
+	$last_name = get_post_meta( $post_id, 'client_last_name', true );
+	echo esc_html( $last_name );
+}
+add_action( 'manage_bloom-client_posts_custom_column', 'bloom_client_last_name_column_content', 10, 2 );
+
+/**
+ * Make column sortable: Last Name.
+ * @param $columns
+ *
+ * @return mixed
+ */
+function bloom_client_last_name_sortable_column( $columns ) {
+	$columns['client_last_name'] = 'client_last_name';
+	return $columns;
+}
+add_filter( 'manage_edit-bloom-client_sortable_columns', 'bloom_client_last_name_sortable_column' );
+
+function bloom_client_last_name_sortable_pre_get_post( $query ) {
+	if ( ! is_admin() ) {
+		return;
+	}
+	if ( 'client_last_name' === $query->get( 'orderby' ) ) {
+		$query->set( 'meta_key', 'client_last_name' );
+		$query->set( 'orderby', 'meta_value' );
+	}
+}
+add_action( 'pre_get_posts', 'bloom_client_last_name_sortable_pre_get_post' );
