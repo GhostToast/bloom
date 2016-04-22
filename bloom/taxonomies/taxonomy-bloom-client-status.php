@@ -98,3 +98,41 @@ function bloom_client_save_status( $post_id ) {
 	}
 }
 add_action( 'save_post__bloom-client', 'bloom_client_save_status' );
+
+/**
+ * Filter by taxonomy terms (admin screen).
+ */
+function bloom_client_status_admin_filter() {
+	global $typenow;
+
+	if ( '_bloom-client' === $typenow ) {
+		$tax_slug = 'bloom-client-status';
+
+		$tax_obj  = get_taxonomy( $tax_slug );
+		$tax_name = $tax_obj->labels->name;
+		$terms    = get_terms( array( 'taxonomy' => $tax_slug ) );
+		if ( count( $terms ) > 0 ) {
+			printf(
+				'<select name="%1$s" id="%1$s" class="postform">',
+				esc_attr( $tax_slug )
+			);
+			printf(
+				'<option value="">Show All %1$s</option>',
+				esc_html( $tax_name )
+			);
+
+			foreach ( $terms as $term ) {
+				printf(
+					'<option value="%1$s" %2$s>%3$s (%4$s)</option>',
+					esc_attr( $term->slug ),
+					selected( $_GET[ $tax_slug ], $term->slug, false ),
+					esc_html( $term->name ),
+					intval( $term->count )
+				);
+			}
+			echo '</select>';
+		}
+	}
+
+}
+add_action( 'restrict_manage_posts', 'bloom_client_status_admin_filter' );
