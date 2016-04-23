@@ -89,12 +89,14 @@
 	}
 
 	/**
-	 * Update the "View Client" link with selected client.
+	 * Update the Session info with Client data on select.
 	 * Used on: session
 	 */
-	function viewClientLinkDisplay() {
+	function sessionClientData() {
 		var $clientDropdown = $( "#_bloom-client-dropdown" ),
 			$viewClientLinkContainer = $( "#bloom-view-client-link-container" ),
+			$clientDiagnosisInput = $( "#bloom_session_diagnosis" ),
+			newDiagnosis = '',
 			newName = '',
 			oldName = '',
 			newURL = '';
@@ -109,9 +111,13 @@
 
 		function updateClientLink() {
 			if ( $clientDropdown.val() ) {
+				newDiagnosis = $clientDropdown.find( ":selected" ).data( "dx" );
 				newName = $clientDropdown.find( ":selected" ).data( "termname" );
 				oldName = $viewClientLink.attr( "href" ).match( "post=(.*)&action");
 				newURL = $viewClientLink.attr( "href" ).replace( oldName[1], newName );
+
+				$clientDiagnosisInput.val( newDiagnosis );
+
 				$viewClientLink.attr( "href", newURL );
 				$viewClientLinkContainer.show();
 			} else {
@@ -126,7 +132,7 @@
 	$( document ).ready( function() {
 		clientTitleCopier();
 		sessionTitleCopier();
-		viewClientLinkDisplay();
+		sessionClientData();
 	} );
 
 } )( jQuery );

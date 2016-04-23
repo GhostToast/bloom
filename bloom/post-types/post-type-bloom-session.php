@@ -74,6 +74,14 @@ function bloom_session_details_metabox( $post ) {
 	$session_insurance_payment = get_post_meta( $post->ID, 'session_insurance_payment', true );
 	$session_balance           = get_post_meta( $post->ID, 'session_balance', true );
 
+	// If `bcid` was provided, let's access originating client to bring in a default diagnosis.
+	if ( empty( $session_diagnosis ) ) {
+		$bcid = filter_input( INPUT_GET, 'bcid', FILTER_CALLBACK, array( 'options' => 'absint' ) );
+		if ( ! empty( $bcid ) ) {
+			$session_diagnosis = get_post_meta( $bcid, 'client_assessment_diagnosis', true );
+		}
+	}
+
 	// @TODO - build a total balance between sessions for a client. It should probably be saved to the client.
 	$total_balance = '';
 	?>
@@ -82,7 +90,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_diagnosis">Diagnosis:</label></th>
 			<td>
 				<div>
-					<input type="text" class="regular-text" name="session_diagnosis" value="<?php echo esc_html( $session_diagnosis ); ?>" autocomplete="off" />
+					<input type="text" class="regular-text" name="session_diagnosis" id="bloom_session_diagnosis" value="<?php echo esc_html( $session_diagnosis ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>

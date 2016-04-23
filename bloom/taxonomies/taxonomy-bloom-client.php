@@ -59,12 +59,17 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 		echo '<option value="">-- Please select</option>';
 		foreach ( $terms as $term ) {
 			$client = get_post( $term->name );
+			if ( empty( $client ) ) {
+				continue;
+			}
+			$diagnosis = get_post_meta( $client->ID, 'client_assessment_diagnosis', true );
 			printf(
-				'<option value="%1$s" data-termname="%4$s" %2$s>%3$s</option>',
+				'<option value="%1$s" data-termname="%4$s" data-dx="%5$s" %2$s>%3$s</option>',
 				esc_attr( $term->term_id ),
 				selected( $term->term_id, $current_id, false ),
 				esc_html( $client->post_title ),
-				esc_attr( $term->name )
+				esc_attr( $term->name ),
+				esc_attr( $diagnosis )
 			);
 		}
 		echo '</select>';
