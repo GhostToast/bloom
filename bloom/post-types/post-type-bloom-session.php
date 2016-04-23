@@ -236,7 +236,7 @@ function bloom_session_last_name_column_content( $column_name, $post_id ) {
 	} // Session Date.
 	elseif ( 'session_date' === $column_name ) {
 		$session_date = get_post_meta( $post_id, 'session_date', true );
-		echo esc_html( $session_date );
+		echo esc_html( date( 'F j, Y ', strtotime( $session_date ) ) );
 	}
 }
 add_action( 'manage_bloom-session_posts_custom_column', 'bloom_session_last_name_column_content', 10, 2 );
