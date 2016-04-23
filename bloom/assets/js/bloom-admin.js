@@ -48,7 +48,7 @@
 	}
 
 	/**
-	 * Copy the compiled name values to the post_title field.
+	 * Copy the date values to the post_title field.
 	 */
 	function sessionTitleCopier() {
 		var $sessionTitleTextInput = $( "body.post-type-bloom-session #title" ),
@@ -72,7 +72,7 @@
 			// Date.
 			if ( $sessionDate.val() ) {
 				if ( newTitle ) {
-					newTitle = newTitle + " - ";
+					newTitle = newTitle + " | ";
 				}
 				newTitle = newTitle + $sessionDate.val();
 			}

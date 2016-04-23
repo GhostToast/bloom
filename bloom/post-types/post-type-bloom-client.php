@@ -542,6 +542,10 @@ function bloom_client_last_name_sortable_column( $columns ) {
 }
 add_filter( 'manage_edit-bloom-client_sortable_columns', 'bloom_client_last_name_sortable_column' );
 
+/**
+ * Adjust query args to make this column sortable.
+ * @param $query
+ */
 function bloom_client_last_name_sortable_pre_get_post( $query ) {
 	if ( ! is_admin() ) {
 		return;

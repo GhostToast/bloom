@@ -110,7 +110,7 @@ function bloom_session_details_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="session_insurance_payment">Insurace Payment:</label></th>
+			<th scope="row" valign="top"><label for="session_insurance_payment">Insurance Payment:</label></th>
 			<td>
 				<div>
 					<input type="number" class="regular-text" name="session_insurance_payment" value="<?php echo esc_html( $session_insurance_payment ); ?>" autocomplete="off" />
@@ -196,3 +196,59 @@ function bloom_session_save_meta( $post_id ) {
 	}
 }
 add_action( 'save_post_bloom-session', 'bloom_session_save_meta' );
+
+/**
+ * Add Extra columns: Last Name. In the order we wish.
+ * @param $columns
+ *
+ * @return mixed
+ */
+function bloom_session_extra_columns( $columns ) {
+	$return_columns = array();
+	foreach ( $columns as $key => $value ) {
+		$return_columns[ $key ] = $value;
+		if ( 'title' === $key ) {
+			// Rename "title" to "name" because it makes more sense here.
+			$return_columns[ $key ] = 'Session Name';
+			$return_columns['session_client_last_name'] = 'Last Name';
+			$return_columns['session_date'] = 'Session Date';
+		}
+	}
+	return $return_columns;
+}
+add_filter( 'manage_edit-bloom-session_columns', 'bloom_session_extra_columns' );
+
+/**
+ * Fill out extra column content: Last Name, Session Date.
+ * @param $column_name
+ * @param $post_id
+ */
+function bloom_session_last_name_column_content( $column_name, $post_id ) {
+	// Last Name.
+	if ( 'session_client_last_name' === $column_name ) {
+		$client_terms = wp_get_object_terms( $post_id, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
+
+		if ( isset( $client_terms[0] ) && isset( $client_terms[0]->name ) ) {
+			$last_name = get_post_meta( $client_terms[0]->name, 'client_last_name', true );
+			echo esc_html( $last_name );
+		}
+	} // Session Date.
+	elseif ( 'session_date' === $column_name ) {
+		$session_date = get_post_meta( $post_id, 'session_date', true );
+		echo esc_html( $session_date );
+	}
+}
+add_action( 'manage_bloom-session_posts_custom_column', 'bloom_session_last_name_column_content', 10, 2 );
+
+/**
+ * Make column sortable: Last Name.
+ * @param $columns
+ *
+ * @return mixed
+ */
+function bloom_session_last_name_sortable_column( $columns ) {
+	$columns['session_client_last_name'] = 'session_client_last_name';
+	$columns['session_date'] = 'session_date';
+	return $columns;
+}
+add_filter( 'manage_edit-bloom-session_sortable_columns', 'bloom_session_last_name_sortable_column' );
