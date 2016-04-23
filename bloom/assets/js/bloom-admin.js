@@ -49,6 +49,7 @@
 
 	/**
 	 * Copy the date values to the post_title field.
+	 * Used on: session
 	 */
 	function sessionTitleCopier() {
 		var $sessionTitleTextInput = $( "body.post-type-bloom-session #title" ),
@@ -63,7 +64,13 @@
 
 		$sessionTitleTextInput.css("color", "rgba(51, 51, 51, 0.5)").prop( "readonly", true );
 
-		$titleElements.on( "change", function() {
+		if ( $clientDropdown.val() ) {
+			updateTitleField();
+		}
+
+		$titleElements.on( "change", updateTitleField );
+
+		function updateTitleField() {
 			var newTitle = "";
 			// Client Name.
 			if ( $clientDropdown.val() ) {
@@ -78,11 +85,12 @@
 			}
 
 			$sessionTitleTextInput.val( newTitle );
-		} );
+		}
 	}
 
 	/**
 	 * Update the "View Client" link with selected client.
+	 * Used on: session
 	 */
 	function viewClientLinkDisplay() {
 		var $clientDropdown = $( "#_bloom-client-dropdown" ),
@@ -93,7 +101,13 @@
 
 		var $viewClientLink = $viewClientLinkContainer.find( "a" );
 
-		$clientDropdown.on( "change", function() {
+		if ( $clientDropdown.val() ) {
+			updateClientLink();
+		}
+
+		$clientDropdown.on( "change", updateClientLink );
+
+		function updateClientLink() {
 			if ( $clientDropdown.val() ) {
 				newName = $clientDropdown.find( ":selected" ).data( "termname" );
 				oldName = $viewClientLink.attr( "href" ).match( "post=(.*)&action");
@@ -103,7 +117,7 @@
 			} else {
 				$viewClientLinkContainer.hide();
 			}
-		})
+		}
 	}
 
 	/**

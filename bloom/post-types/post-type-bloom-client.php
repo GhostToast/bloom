@@ -95,6 +95,16 @@ function bloom_client_add_meta_boxes() {
 		'default'
 	);
 
+	// Assessment.
+	add_meta_box(
+		'bloom_client_assessment_metabox',
+		'Assessment',
+		'bloom_client_assessment_metabox',
+		'bloom-client',
+		'advanced',
+		'default'
+	);
+
 	// Session Quicklinks.
 	add_meta_box(
 		'bloom_client_session_quicklinks_metabox',
@@ -387,14 +397,14 @@ function bloom_client_insurance_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="insurance_benefit_information">Insurance Benefit Information/Notes:</label></th>
+			<th scope="row" valign="top"><label for="insurance_benefit_information">Insurance Benefit Information:</label></th>
 			<td>
 				<div>
 					<?php wp_editor(
 						wp_kses_post( $insurance_benefit_information ),
 						'insurance_benefit_information',
 						array(
-							'textarea_rows' => 10,
+							'textarea_rows' => 5,
 							'media_buttons' => false,
 							'tinymce' => array(
 								'toolbar1' => 'bold,italic,underline,link,unlink,bullist,numlist,undo,redo,pastetext,removeformat',
@@ -410,6 +420,48 @@ function bloom_client_insurance_metabox( $post ) {
 	<?php
 }
 
+
+/**
+ * Client Assessment metabox.
+ * @param $post
+ */
+function bloom_client_assessment_metabox( $post ) {
+	wp_nonce_field( 'bloom_client_assessment_metabox', 'bloom_client_assessment_nonce' );
+	$client_assessment_diagnosis = get_post_meta( $post->ID, 'client_assessment_diagnosis', true );
+	$client_assessment_notes     = get_post_meta( $post->ID, 'client_assessment_notes', true );
+	?>
+	<table class="form-table">
+		<tr>
+			<th scope="row" valign="top"><label for="client_assessment_diagnosis">Diagnosis:</label></th>
+			<td>
+				<div>
+					<input type="text" class="regular-text" name="client_assessment_diagnosis" value="<?php echo esc_html( $client_assessment_diagnosis ); ?>" autocomplete="off" />
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" valign="top"><label for="client_assessment_notes">Notes:</label></th>
+			<td>
+				<div>
+					<?php wp_editor(
+						wp_kses_post( $client_assessment_notes ),
+						'client_assessment_notes',
+						array(
+							'textarea_rows' => 20,
+							'media_buttons' => false,
+							'tinymce' => array(
+								'toolbar1' => 'bold,italic,underline,link,unlink,bullist,numlist,undo,redo,pastetext,removeformat',
+								'toolbar2' => ' ',
+							),
+							'quicktags' => false,
+						)
+					); ?>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
 
 /**
  * Client Sessions Quicklinks metabox.
@@ -508,6 +560,12 @@ function bloom_client_save_meta( $post_id ) {
 		$sanitized_inputs['insurance_policy_holder_dob']      = filter_input( INPUT_POST, 'insurance_policy_holder_dob', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
 		$sanitized_inputs['insurance_customer_service_phone'] = filter_input( INPUT_POST, 'insurance_customer_service_phone', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
 		$sanitized_inputs['insurance_benefit_information']    = filter_input( INPUT_POST, 'insurance_benefit_information', FILTER_CALLBACK, array( 'options' => 'wp_kses_post' ) );
+	}
+
+	$nonce = filter_input( INPUT_POST, 'bloom_client_assessment_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_client_assessment_metabox' ) ) {
+		$sanitized_inputs['client_assessment_diagnosis']  = filter_input( INPUT_POST, 'client_assessment_diagnosis', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['client_assessment_notes'] = filter_input( INPUT_POST, 'client_assessment_notes', FILTER_CALLBACK, array( 'options' => 'wp_kses_post' ) );
 	}
 
 	foreach ( $sanitized_inputs as $key => $value ) {
