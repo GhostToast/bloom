@@ -497,10 +497,13 @@ function bloom_client_session_quicklinks_metabox( $post ) {
 	if ( $sessions->have_posts() ) :
 		foreach ( $sessions->posts as $session_id ) :
 			$date = get_post_meta( $session_id, 'session_date', true );
+			if ( ! empty( $date ) ) {
+				$date = date( 'F j, Y ', strtotime( $date ) );
+			}
 			printf(
 				'<a href="%1$s">%2$s</a><br>',
 				esc_url( get_edit_post_link( $session_id, '&' ) ),
-				esc_html( date( 'F j, Y ', strtotime( $date ) ) )
+				esc_html( $date )
 			);
 		endforeach;
 	else :
