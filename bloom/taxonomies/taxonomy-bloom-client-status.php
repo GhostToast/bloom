@@ -15,7 +15,7 @@ function bloom_client_status_taxonomy() {
 		array(
 			'label'              => 'Status',
 			'public'             => true,
-			'show_admin_column'  => false,
+			'show_admin_column'  => true,
 			'show_in_nav_menus'  => false,
 			'show_in_menu'       => false,
 			'show_in_quick_edit' => false,

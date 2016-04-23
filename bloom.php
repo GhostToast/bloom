@@ -15,9 +15,10 @@ include_once( 'bloom/taxonomies/taxonomy-bloom-client.php' );
 include_once( 'bloom/taxonomies/taxonomy-bloom-client-status.php' );
 
 /**
- * Remove unnecessary items from Admin Menu.
+ * Remove unnecessary Admin Menu items.
  */
 function bloom_remove_admin_menu_items() {
+
 	remove_menu_page( 'index.php' );
 	remove_menu_page( 'edit.php' );
 	remove_menu_page( 'upload.php' );
@@ -26,6 +27,7 @@ function bloom_remove_admin_menu_items() {
 	remove_menu_page( 'themes.php' );
 	remove_menu_page( 'users.php' );
 	remove_menu_page( 'tools.php' );
+
 }
 add_action( 'admin_menu', 'bloom_remove_admin_menu_items' );
 

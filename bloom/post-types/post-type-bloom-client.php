@@ -123,12 +123,12 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_middle_name">Middle:</label></th>
 			<td>
 				<div>
-					<input type="text" class="small-text js-client-title" name="client_middle_name" id="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" autocomplete="off" />
+					<input type="text" class="regular-text js-client-title" name="client_middle_name" id="client_middle_name" size="36" value="<?php echo esc_html( $client_middle_name ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="client_last_name">Last Name (required):</label></th>
+			<th scope="row" valign="top"><label for="client_last_name">Last Name:<br><span style="font-weight:normal;font-style:italic;">Required</span></label></th>
 			<td>
 				<div>
 					<input type="text" class="regular-text js-client-title" name="client_last_name" id="client_last_name" size="36" value="<?php echo esc_html( $client_last_name ); ?>" autocomplete="off" required/>
@@ -136,7 +136,7 @@ function bloom_client_information_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="client_phone_1">Phone (required):</label></th>
+			<th scope="row" valign="top"><label for="client_phone_1">Phone:<br><span style="font-weight:normal;font-style:italic;">Required</span></label></th>
 			<td>
 				<div>
 					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" required/>
@@ -505,10 +505,12 @@ add_action( 'before_delete_post', 'bloom_client_delete_shadow_term' );
 function bloom_client_extra_columns( $columns ) {
 	$return_columns = array();
 	foreach ( $columns as $key => $value ) {
-		if ( 'date' === $key ) {
+		$return_columns[ $key ] = $value;
+		if ( 'title' === $key ) {
+			// Rename "title" to "name" because it makes more sense here.
+			$return_columns[ $key ] = 'Name';
 			$return_columns['client_last_name'] = 'Last Name';
 		}
-		$return_columns[ $key ] = $value;
 	}
 	return $return_columns;
 }
