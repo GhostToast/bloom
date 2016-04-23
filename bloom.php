@@ -1,6 +1,13 @@
 <?php
 /**
- * Bloom - Client contact management and billing history.
+ * Plugin Name: Bloom - Client Management
+ * Plugin URI: https://github.com/GhostToast/bloom
+ * Description: Client management and session history for private practices. Not intended for <strong>public facing</strong> web use. Heavily pares down other WordPress menus and content types.
+ * Version: 0.1
+ * Author: Gustave F. Gerahrdt
+ * Author URI: http://ghosttoa.st
+ * License: GPLv2 or later
+ *
  * @package bloom
  */
 
@@ -9,11 +16,11 @@ if ( ! defined( 'BLOOM_PLUGIN_URL' ) ) {
 	define( 'BLOOM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 
-include_once( 'bloom/post-types/post-type-bloom-client.php' );
-include_once( 'bloom/post-types/post-type-bloom-session.php' );
-include_once( 'bloom/taxonomies/taxonomy-bloom-client.php' );
-include_once( 'bloom/taxonomies/taxonomy-bloom-client-status.php' );
-include_once( 'bloom/taxonomies/taxonomy-bloom-session-status.php' );
+include_once( 'post-types/post-type-bloom-client.php' );
+include_once( 'post-types/post-type-bloom-session.php' );
+include_once( 'taxonomies/taxonomy-bloom-client.php' );
+include_once( 'taxonomies/taxonomy-bloom-client-status.php' );
+include_once( 'taxonomies/taxonomy-bloom-session-status.php' );
 
 /**
  * Remove unnecessary Admin Menu items.
@@ -49,7 +56,7 @@ add_action( 'admin_bar_menu', 'bloom_remove_admin_bar_menu_items', 999 );
  */
 function bloom_enqueue_admin_js() {
 	wp_enqueue_media();
-	wp_enqueue_script( 'bloom-admin', BLOOM_PLUGIN_URL . 'bloom/assets/js/bloom-admin.js', array( 'jquery' ) );
+	wp_enqueue_script( 'bloom-admin', BLOOM_PLUGIN_URL . 'assets/js/bloom-admin.js', array( 'jquery' ) );
 }
 add_action( 'admin_enqueue_scripts', 'bloom_enqueue_admin_js' );
 
