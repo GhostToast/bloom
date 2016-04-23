@@ -225,9 +225,9 @@ function bloom_session_extra_columns( $columns ) {
 			// Rename "title" to "name" because it makes more sense here.
 			$return_columns[ $key ] = 'Session Name';
 			$return_columns['session_client_last_name'] = 'Last Name';
-			$return_columns['session_date'] = 'Session Date';
 		}
 	}
+	$return_columns['session_date'] = 'Session Date'; // Tail end.
 	return $return_columns;
 }
 add_filter( 'manage_edit-bloom-session_columns', 'bloom_session_extra_columns' );
@@ -266,7 +266,6 @@ function bloom_session_last_name_sortable_column( $columns ) {
 	return $columns;
 }
 add_filter( 'manage_edit-bloom-session_sortable_columns', 'bloom_session_last_name_sortable_column' );
-
 
 /**
  * Add quick link.

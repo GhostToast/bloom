@@ -8,19 +8,19 @@
  * Register bloom-client taxonomy.
  */
 function bloom_client_register_taxonomy() {
-
 	register_taxonomy(
 		'_bloom-client',
 		'bloom-session',
 		array(
-			'label'         => 'Client (Required)',
-			'sort'          => true,
-			'rewrite'       => false,
-			'show_in_menu'  => false,
-			'show_tagcloud' => false,
-			'hierarchical'  => false,
-			'capabilities'  => array( 'assign_terms' => 'edit_posts' ),
-			'meta_box_cb'  => 'bloom_client_taxonomy_metabox',
+			'label'              => 'Client (Required)',
+			'sort'               => true,
+			'rewrite'            => false,
+			'show_in_menu'       => false,
+			'show_in_quick_edit' => false,
+			'show_tagcloud'      => false,
+			'hierarchical'       => false,
+			'capabilities'       => array( 'assign_terms' => 'edit_posts' ),
+			'meta_box_cb'        => 'bloom_client_taxonomy_metabox',
 		)
 	);
 }

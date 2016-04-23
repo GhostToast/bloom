@@ -13,6 +13,7 @@ include_once( 'bloom/post-types/post-type-bloom-client.php' );
 include_once( 'bloom/post-types/post-type-bloom-session.php' );
 include_once( 'bloom/taxonomies/taxonomy-bloom-client.php' );
 include_once( 'bloom/taxonomies/taxonomy-bloom-client-status.php' );
+include_once( 'bloom/taxonomies/taxonomy-bloom-session-status.php' );
 
 /**
  * Remove unnecessary Admin Menu items.

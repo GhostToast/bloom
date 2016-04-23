@@ -1,6 +1,6 @@
 <?php
 /**
- * Client Status Taxonomy - Active, Inactive
+ * Session Status Taxonomy - Submitted, Paid
  *
  * @package Wirecutter
  */
@@ -8,10 +8,10 @@
 /**
  * Register Status Taxonomy.
  */
-function bloom_client_status_taxonomy() {
+function bloom_session_status_taxonomy() {
 	register_taxonomy(
-		'bloom-client-status',
-		'bloom-client',
+		'bloom-session-status',
+		'bloom-session',
 		array(
 			'label'              => 'Status',
 			'public'             => true,
@@ -26,25 +26,25 @@ function bloom_client_status_taxonomy() {
 			'capabilities'       => array(
 				'assign_terms' => 'edit_posts',
 			),
-			'meta_box_cb'        => 'bloom_client_status_metabox',
+			'meta_box_cb'        => 'bloom_session_status_metabox',
 		)
 	);
 
 	$terms = array(
-		'Active',
-		'Inactive',
+		'Submitted',
+		'Paid',
 	);
 
 	/**
 	 * Create our terms.
 	 */
 	foreach ( $terms as $term ) {
-		if ( ! term_exists( $term, 'bloom-client-status' ) ) {
-			wp_insert_term( $term, 'bloom-client-status' );
+		if ( ! term_exists( $term, 'bloom-session-status' ) ) {
+			wp_insert_term( $term, 'bloom-session-status' );
 		}
 	}
 }
-add_action( 'init', 'bloom_client_status_taxonomy' );
+add_action( 'init', 'bloom_session_status_taxonomy' );
 
 /**
  * Display the Status Term select box
@@ -52,10 +52,10 @@ add_action( 'init', 'bloom_client_status_taxonomy' );
  * @param $post
  * @param $box
  */
-function bloom_client_status_metabox( $post, $box ) {
-	wp_nonce_field( 'bloom-client-status_meta_display', 'bloom-client-status_nonce' );
-	$terms = get_terms( array( 'taxonomy' => 'bloom-client-status', 'hide_empty' => false, 'orderby' => 'term_id' ) );
-	$status = wp_get_object_terms( $post->ID, 'bloom-client-status', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
+function bloom_session_status_metabox( $post, $box ) {
+	wp_nonce_field( 'bloom-session-status_meta_display', 'bloom-session-status_nonce' );
+	$terms = get_terms( array( 'taxonomy' => 'bloom-session-status', 'hide_empty' => false, 'orderby' => 'term_id' ) );
+	$status = wp_get_object_terms( $post->ID, 'bloom-session-status', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
 
 	if ( ! is_wp_error( $status ) && isset( $status[0] ) && isset( $status[0]->name ) ) {
 		$current = $status[0]->name;
@@ -65,7 +65,7 @@ function bloom_client_status_metabox( $post, $box ) {
 
 	foreach ( $terms as $term ) {
 		printf(
-			'<label title="%1$s"><input type="radio" name="bloom-client-status" value="%1$s" %2$s><span>%1$s</span></label><br>',
+			'<label title="%1$s"><input type="radio" name="bloom-session-status" value="%1$s" %2$s><span>%1$s</span></label><br>',
 			esc_attr( $term->name ),
 			checked( $term->name, $current, false )
 		);
@@ -73,41 +73,41 @@ function bloom_client_status_metabox( $post, $box ) {
 }
 
 /**
- * Save our Status for Client
+ * Save our Status for Session
  * @param $post_id
  */
-function bloom_client_save_status( $post_id ) {
+function bloom_session_save_status( $post_id ) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 
-	$nonce = filter_input( INPUT_POST, 'bloom-client-status_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
-	if ( ! wp_verify_nonce( $nonce, 'bloom-client-status_meta_display' ) ) {
+	$nonce = filter_input( INPUT_POST, 'bloom-session-status_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( ! wp_verify_nonce( $nonce, 'bloom-session-status_meta_display' ) ) {
 		return;
 	}
 
-	if ( isset( $_POST['bloom-client-status'] ) ) {
-		$status = sanitize_text_field( $_POST['bloom-client-status'] );
+	if ( isset( $_POST['bloom-session-status'] ) ) {
+		$status = sanitize_text_field( $_POST['bloom-session-status'] );
 	}
 
 	if ( empty( $status ) ) {
-		$status = 'Active';
+		$status = 'Submitted';
 	}
-	$term = get_term_by( 'name', $status, 'bloom-client-status' );
+	$term = get_term_by( 'name', $status, 'bloom-session-status' );
 	if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
-		wp_set_object_terms( $post_id, $term->term_id, 'bloom-client-status', false );
+		wp_set_object_terms( $post_id, $term->term_id, 'bloom-session-status', false );
 	}
 }
-add_action( 'save_post_bloom-client', 'bloom_client_save_status' );
+add_action( 'save_post_bloom-session', 'bloom_session_save_status' );
 
 /**
  * Filter by taxonomy terms (admin screen).
  */
-function bloom_client_status_admin_filter() {
+function bloom_session_status_admin_filter() {
 	global $typenow;
 
-	if ( 'bloom-client' === $typenow ) {
-		$tax_slug = 'bloom-client-status';
+	if ( 'bloom-session' === $typenow ) {
+		$tax_slug = 'bloom-session-status';
 
 		$tax_obj  = get_taxonomy( $tax_slug );
 		$tax_name = $tax_obj->labels->name;
@@ -136,4 +136,4 @@ function bloom_client_status_admin_filter() {
 	}
 
 }
-add_action( 'restrict_manage_posts', 'bloom_client_status_admin_filter' );
+add_action( 'restrict_manage_posts', 'bloom_session_status_admin_filter' );
