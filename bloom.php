@@ -52,3 +52,30 @@ function bloom_enqueue_admin_js() {
 	wp_enqueue_script( 'bloom-admin', BLOOM_PLUGIN_URL . 'bloom/assets/js/bloom-admin.js', array( 'jquery' ) );
 }
 add_action( 'admin_enqueue_scripts', 'bloom_enqueue_admin_js' );
+
+/**
+ * Custom labels for custom post types.
+ * @param $bulk_messages
+ * @param $bulk_counts
+ *
+ * @return mixed
+ */
+function bloom_bulk_post_updated_messages_filter( $bulk_messages, $bulk_counts ) {
+	$bulk_messages['bloom-client'] = array(
+		'updated'   => _n( '%s client updated.', '%s clients updated.', $bulk_counts['updated'] ),
+		'locked'    => _n( '%s client not updated, somebody is editing it.', '%s clients not updated, somebody is editing them.', $bulk_counts['locked'] ),
+		'deleted'   => _n( '%s client permanently deleted.', '%s clients permanently deleted.', $bulk_counts['deleted'] ),
+		'trashed'   => _n( '%s client moved to the Trash.', '%s clients moved to the Trash.', $bulk_counts['trashed'] ),
+		'untrashed' => _n( '%s client restored from the Trash.', '%s clients restored from the Trash.', $bulk_counts['untrashed'] ),
+	);
+
+	$bulk_messages['bloom-session'] = array(
+		'updated'   => _n( '%s session updated.', '%s sessions updated.', $bulk_counts['updated'] ),
+		'locked'    => _n( '%s session not updated, somebody is editing it.', '%s sessions not updated, somebody is editing them.', $bulk_counts['locked'] ),
+		'deleted'   => _n( '%s session permanently deleted.', '%s sessions permanently deleted.', $bulk_counts['deleted'] ),
+		'trashed'   => _n( '%s session moved to the Trash.', '%s sessions moved to the Trash.', $bulk_counts['trashed'] ),
+		'untrashed' => _n( '%s session restored from the Trash.', '%s sessions restored from the Trash.', $bulk_counts['untrashed'] ),
+	);
+	return $bulk_messages;
+}
+add_filter( 'bulk_post_updated_messages', 'bloom_bulk_post_updated_messages_filter', 10, 2 );
