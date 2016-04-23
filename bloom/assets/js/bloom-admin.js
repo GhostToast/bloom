@@ -99,6 +99,9 @@
 				oldName = $viewClientLink.attr( "href" ).match( "post=(.*)&action");
 				newURL = $viewClientLink.attr( "href" ).replace( oldName[1], newName );
 				$viewClientLink.attr( "href", newURL );
+				$viewClientLinkContainer.show();
+			} else {
+				$viewClientLinkContainer.hide();
 			}
 		})
 	}
