@@ -98,7 +98,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_fee">Session Fee:</label></th>
 			<td>
 				<div>
-					<input type="number" class="small-text" name="session_fee" value="<?php echo esc_html( $session_fee ); ?>" autocomplete="off" />
+					<input type="number" step="0.01" class="regular-text" name="session_fee" value="<?php echo esc_html( $session_fee ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -106,7 +106,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_collected">Collected/Copay:</label></th>
 			<td>
 				<div>
-					<input type="number" class="regular-text" name="session_collected" value="<?php echo esc_html( $session_collected ); ?>" autocomplete="off" />
+					<input type="number" step="0.01" class="regular-text" name="session_collected" value="<?php echo esc_html( $session_collected ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -114,7 +114,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_insurance_payment">Insurance Payment:</label></th>
 			<td>
 				<div>
-					<input type="number" class="regular-text" name="session_insurance_payment" value="<?php echo esc_html( $session_insurance_payment ); ?>" autocomplete="off" />
+					<input type="number" step="0.01" class="regular-text" name="session_insurance_payment" value="<?php echo esc_html( $session_insurance_payment ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -122,7 +122,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_balance">Session Balance:</label></th>
 			<td>
 				<div>
-					<input type="number" class="regular-text" name="session_balance" value="<?php echo esc_html( $session_balance ); ?>" autocomplete="off" />
+					<input type="number" step="0.01" class="regular-text" name="session_balance" value="<?php echo esc_html( $session_balance ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -176,10 +176,10 @@ function bloom_session_save_meta( $post_id ) {
 	if ( wp_verify_nonce( $nonce, 'bloom_session_details_metabox' ) ) {
 		$sanitized_inputs['session_diagnosis']         = filter_input( INPUT_POST, 'session_diagnosis', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
 		$sanitized_inputs['session_date']              = filter_input( INPUT_POST, 'session_date', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
-		$sanitized_inputs['session_fee']               = filter_input( INPUT_POST, 'session_fee', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
-		$sanitized_inputs['session_collected']         = filter_input( INPUT_POST, 'session_collected', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
-		$sanitized_inputs['session_insurance_payment'] = filter_input( INPUT_POST, 'session_insurance_payment', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
-		$sanitized_inputs['session_balance']           = filter_input( INPUT_POST, 'session_balance', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_fee']               = number_format( filter_input( INPUT_POST, 'session_fee', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) ), 2, '.', '' );
+		$sanitized_inputs['session_collected']         = number_format( filter_input( INPUT_POST, 'session_collected', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) ), 2, '.', '' );
+		$sanitized_inputs['session_insurance_payment'] = number_format( filter_input( INPUT_POST, 'session_insurance_payment', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) ), 2, '.', '' );
+		$sanitized_inputs['session_balance']           = number_format( filter_input( INPUT_POST, 'session_balance', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) ), 2, '.', '' );
 	}
 
 	$nonce = filter_input( INPUT_POST, 'bloom_session_notes_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
@@ -187,9 +187,22 @@ function bloom_session_save_meta( $post_id ) {
 		$sanitized_inputs['session_notes'] = filter_input( INPUT_POST, 'session_notes', FILTER_CALLBACK, array( 'options' => 'wp_kses_post' ) );
 	}
 
+	// Some values we want to at least save zero for.
+	$save_empties = array(
+		'session_fee',
+		'session_collected',
+		'session_insurance_payment',
+		'session_balance',
+	);
+
+	foreach ( $save_empties as $maybe_empty ) {
+		if ( empty( $sanitized_inputs[ $maybe_empty ] ) ) {
+			$sanitized_inputs[ $maybe_empty ] = 0;
+		}
+	}
 
 	foreach ( $sanitized_inputs as $key => $value ) {
-		if ( empty( $value ) ) {
+		if ( empty( $value ) && ! in_array( $key, $save_empties ) ) {
 			delete_post_meta( $post_id, $key );
 		} else {
 			update_post_meta( $post_id, $key, $value );
