@@ -646,6 +646,7 @@ function bloom_client_extra_columns( $columns ) {
 			// Rename "title" to "name" because it makes more sense here.
 			$return_columns[ $key ] = 'Name';
 			$return_columns['client_last_name'] = 'Last Name';
+			$return_columns['client_last_session'] = 'Last Session';
 		}
 	}
 	return $return_columns;
@@ -692,6 +693,47 @@ function bloom_client_last_name_sortable_pre_get_post( $query ) {
 	}
 }
 add_action( 'pre_get_posts', 'bloom_client_last_name_sortable_pre_get_post' );
+
+/**
+ * Fill out extra column content: Last Session Date
+ * @param $column_name
+ * @param $post_id
+ */
+function bloom_client_last_session_column_content( $column_name, $post_id ) {
+	if ( 'client_last_session' !== $column_name ) {
+		return;
+	}
+	$client_sessions = new WP_Query(
+		array(
+			'post_type'      => 'bloom-session',
+			'post_status'    => 'publish',
+			'orderby'        => 'meta_value',
+			'meta_key'       => 'session_date',
+			'posts_per_page' => 1,
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
+			'tax_query'      => array(
+				array(
+					'taxonomy' => '_bloom-client',
+					'field' => 'name',
+					'terms' => $post_id,
+				),
+			),
+		)
+	);
+	if ( $client_sessions->have_posts() ) :
+		foreach ( $client_sessions->posts as $session_id ) :
+			$session_date = get_post_meta( $session_id, 'session_date', true );
+			break;
+		endforeach;
+	endif;
+
+	if ( ! empty( $session_date ) ) {
+		echo esc_html( date( 'F j, Y ', strtotime( $session_date ) ) );
+	}
+}
+add_action( 'manage_bloom-client_posts_custom_column', 'bloom_client_last_session_column_content', 10, 2 );
+
 
 /**
  * Add quick link.
