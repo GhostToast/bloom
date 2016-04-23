@@ -376,10 +376,22 @@ function bloom_client_insurance_metabox( $post ) {
 			</td>
 		</tr>
 		<tr>
-			<th scope="row" valign="top"><label for="insurance_benefit_information">Insurance Benefit Information:</label></th>
+			<th scope="row" valign="top"><label for="insurance_benefit_information">Insurance Benefit Information/Notes:</label></th>
 			<td>
 				<div>
-					<textarea cols="80" rows="10" name="insurance_benefit_information"><?php echo esc_html( $insurance_benefit_information ); ?></textarea>
+					<?php wp_editor(
+						wp_kses_post( $insurance_benefit_information ),
+						'insurance_benefit_information',
+						array(
+							'textarea_rows' => 10,
+							'media_buttons' => false,
+							'tinymce' => array(
+								'toolbar1' => 'bold,italic,underline,link,unlink,bullist,numlist,undo,redo,pastetext,removeformat',
+								'toolbar2' => ' ',
+							),
+							'quicktags' => false,
+						)
+					); ?>
 				</div>
 			</td>
 		</tr>
@@ -432,7 +444,7 @@ function bloom_client_save_meta( $post_id ) {
 		$sanitized_inputs['insurance_policy_holder_name']     = filter_input( INPUT_POST, 'insurance_policy_holder_name', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
 		$sanitized_inputs['insurance_policy_holder_dob']      = filter_input( INPUT_POST, 'insurance_policy_holder_dob', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
 		$sanitized_inputs['insurance_customer_service_phone'] = filter_input( INPUT_POST, 'insurance_customer_service_phone', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
-		$sanitized_inputs['insurance_benefit_information']    = filter_input( INPUT_POST, 'insurance_benefit_information', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['insurance_benefit_information']    = filter_input( INPUT_POST, 'insurance_benefit_information', FILTER_CALLBACK, array( 'options' => 'wp_kses_post' ) );
 	}
 
 	foreach ( $sanitized_inputs as $key => $value ) {
