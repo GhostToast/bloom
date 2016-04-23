@@ -82,11 +82,34 @@
 	}
 
 	/**
+	 * Update the "View Client" link with selected client.
+	 */
+	function viewClientLinkDisplay() {
+		var $clientDropdown = $( "#_bloom-client-dropdown" ),
+			$viewClientLinkContainer = $( "#bloom-view-client-link-container" ),
+			newName = '',
+			oldName = '',
+			newURL = '';
+
+		var $viewClientLink = $viewClientLinkContainer.find( "a" );
+
+		$clientDropdown.on( "change", function() {
+			if ( $clientDropdown.val() ) {
+				newName = $clientDropdown.find( ":selected" ).data( "termname" );
+				oldName = $viewClientLink.attr( "href" ).match( "post=(.*)&action");
+				newURL = $viewClientLink.attr( "href" ).replace( oldName[1], newName );
+				$viewClientLink.attr( "href", newURL );
+			}
+		})
+	}
+
+	/**
 	 * Run all of our bits here.
 	 */
 	$( document ).ready( function() {
 		clientTitleCopier();
 		sessionTitleCopier();
+		viewClientLinkDisplay();
 	} );
 
 } )( jQuery );

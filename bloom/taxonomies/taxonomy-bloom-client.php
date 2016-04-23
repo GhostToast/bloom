@@ -45,9 +45,13 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 	}
 
 	if ( isset( $client_terms[0] ) && isset( $client_terms[0]->term_id ) ) {
-		$current = $client_terms[0]->term_id;
+		$current_id = $client_terms[0]->term_id;
+		$current_name = $client_terms[0]->name;
+		$view_client_hidden = false;
 	} else {
-		$current = false;
+		$current_id = false;
+		$current_name = 0;
+		$view_client_hidden = true;
 	}
 
 	if ( ! empty( $terms ) ) {
@@ -56,22 +60,29 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 		foreach ( $terms as $term ) {
 			$client = get_post( $term->name );
 			printf(
-				'<option value="%1$s" %2$s>%3$s</option>',
+				'<option value="%1$s" data-termname="%4$s" %2$s>%3$s</option>',
 				esc_attr( $term->term_id ),
-				selected( $term->term_id, $current, false ),
-				esc_html( $client->post_title )
+				selected( $term->term_id, $current_id, false ),
+				esc_html( $client->post_title ),
+				esc_attr( $term->name )
 			);
 		}
 		echo '</select>';
-		$format_string = '<p>Or create a <a href="%1$s">new client</a>.</p>';
+
+		printf(
+			'<p><span style="%1$s" id="bloom-view-client-link-container"><a href="%2$s">View client</a> |</span> <a href="%3$s">New client</a>',
+			$view_client_hidden ? esc_attr( 'display:none;' ) : esc_attr( '' ),
+			esc_url( admin_url( "/post.php?post={$current_name}&action=edit" ) ),
+			esc_url( admin_url( '/post-new.php?post_type=bloom-client' ) )
+		);
 	} else {
-		$format_string = '<p>First, create a <a href="%1$s">new client</a>.</p>';
+		printf(
+			'<p>First, create a <a href="%1$s">new client</a>.</p>',
+			esc_url( admin_url( '/post-new.php?post_type=bloom-client' ) )
+		);
 	}
 
-	printf(
-		$format_string,
-		esc_url( admin_url( '/post-new.php?post_type=bloom-client' ) )
-	);
+
 	echo '</form>';
 }
 

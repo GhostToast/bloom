@@ -72,7 +72,8 @@ function bloom_session_details_metabox( $post ) {
 	$session_collected         = get_post_meta( $post->ID, 'session_collected', true );
 	$session_insurance_payment = get_post_meta( $post->ID, 'session_insurance_payment', true );
 	$session_balance           = get_post_meta( $post->ID, 'session_balance', true );
-	
+
+	// @TODO - build a total balance between sessions for a client. It should probably be saved to the client.
 	$total_balance = '';
 	?>
 	<table class="form-table">
@@ -120,7 +121,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_balance">Session Balance:</label></th>
 			<td>
 				<div>
-					<input type="number" class="regular-text" name="insurance_customer_service_phone" value="<?php echo esc_html( $session_balance ); ?>" autocomplete="off" />
+					<input type="number" class="regular-text" name="session_balance" value="<?php echo esc_html( $session_balance ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -141,7 +142,7 @@ function bloom_session_notes_metabox( $post ) {
 			<td colspan="2">
 				<?php wp_editor(
 					wp_kses_post( $session_notes ),
-					'bloom_session_notes',
+					'session_notes',
 					array(
 						'textarea_rows' => 10,
 						'media_buttons' => false,
@@ -157,3 +158,41 @@ function bloom_session_notes_metabox( $post ) {
 	</table>
 	<?php
 }
+
+/**
+ * Save session post meta.
+ *
+ * @param int    $post_id ID of post.
+ */
+function bloom_session_save_meta( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	$sanitized_inputs = array();
+
+	$nonce = filter_input( INPUT_POST, 'bloom_session_details_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_session_details_metabox' ) ) {
+		$sanitized_inputs['session_diagnosis']         = filter_input( INPUT_POST, 'session_diagnosis', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_date']              = filter_input( INPUT_POST, 'session_date', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_fee']               = filter_input( INPUT_POST, 'session_fee', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_collected']         = filter_input( INPUT_POST, 'session_collected', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_insurance_payment'] = filter_input( INPUT_POST, 'session_insurance_payment', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+		$sanitized_inputs['session_balance']           = filter_input( INPUT_POST, 'session_balance', FILTER_CALLBACK, array( 'options' => 'sanitize_text_field' ) );
+	}
+
+	$nonce = filter_input( INPUT_POST, 'bloom_session_notes_nonce', FILTER_CALLBACK, array( 'options' => 'sanitize_key' ) );
+	if ( wp_verify_nonce( $nonce, 'bloom_session_notes_metabox' ) ) {
+		$sanitized_inputs['session_notes'] = filter_input( INPUT_POST, 'session_notes', FILTER_CALLBACK, array( 'options' => 'wp_kses_post' ) );
+	}
+
+
+	foreach ( $sanitized_inputs as $key => $value ) {
+		if ( empty( $value ) ) {
+			delete_post_meta( $post_id, $key );
+		} else {
+			update_post_meta( $post_id, $key, $value );
+		}
+	}
+}
+add_action( 'save_post_bloom-session', 'bloom_session_save_meta' );
