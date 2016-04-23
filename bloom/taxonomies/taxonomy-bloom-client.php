@@ -70,9 +70,9 @@ function bloom_client_taxonomy_metabox( $post, $box ) {
 		echo '</select>';
 
 		printf(
-			'<p><span style="%1$s" id="bloom-view-client-link-container"><a href="%2$s">View client</a> |</span> <a href="%3$s">New client</a>',
+			'<p><span style="%1$s" id="bloom-view-client-link-container"><a href="%2$s">Edit client</a> |</span> <a href="%3$s">New client</a>',
 			$view_client_hidden ? esc_attr( 'display:none;' ) : esc_attr( '' ),
-			esc_url( admin_url( "/post.php?post={$current_name}&action=edit" ) ),
+			esc_url( get_edit_post_link( $current_name, '&' ) ),
 			esc_url( admin_url( '/post-new.php?post_type=bloom-client' ) )
 		);
 	} else {

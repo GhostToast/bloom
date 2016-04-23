@@ -24,11 +24,12 @@ function bloom_register_session_post_type() {
 				'not_found'          => 'No sessions found',
 				'not_found_in_trash' => 'No sessions found in Trash',
 			),
-			'public'      => true,
-			'has_archive' => true,
-			'rewrite'     => array( 'slug' => 'sessions' ),
-			'menu_icon'   => 'dashicons-clock',
-			'supports'    => array( 'title' ),
+			'public'             => true,
+			'publicly_queryable' => false,
+			'has_archive'        => true,
+			'rewrite'            => array( 'slug' => 'sessions' ),
+			'menu_icon'          => 'dashicons-clock',
+			'supports'           => array( 'title' ),
 		)
 	);
 }
@@ -252,3 +253,34 @@ function bloom_session_last_name_sortable_column( $columns ) {
 	return $columns;
 }
 add_filter( 'manage_edit-bloom-session_sortable_columns', 'bloom_session_last_name_sortable_column' );
+
+
+/**
+ * Add quick link.
+ * @param         $actions
+ * @param WP_Post $post
+ *
+ * @return mixed
+ */
+function bloom_session_row_actions( $actions, WP_Post $post ) {
+	if ( 'bloom-session' !== $post->post_type ) {
+		return $actions;
+	}
+
+	// Remove quick edit.
+	unset( $actions['inline hide-if-no-js'] );
+
+	$client_terms = wp_get_object_terms( $post->ID, '_bloom-client', array( 'orderby' => 'term_id', 'order' => 'ASC' ) );
+
+	if ( isset( $client_terms[0] ) && isset( $client_terms[0]->name ) ) {
+		// Add "View Client" link.
+		$actions['bloom_client_link'] = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url( get_edit_post_link( $client_terms[0]->name, '&' ) ),
+			'Edit Client'
+		);
+	}
+
+	return $actions;
+}
+add_filter( 'post_row_actions', 'bloom_session_row_actions', 10, 2 );

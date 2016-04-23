@@ -25,11 +25,12 @@ function bloom_register_client_post_type() {
 				'not_found'          => 'No clients found',
 				'not_found_in_trash' => 'No clients found in Trash',
 			),
-			'public'      => true,
-			'has_archive' => true,
-			'rewrite'     => array( 'slug' => 'clients' ),
-			'menu_icon'   => 'dashicons-heart',
-			'supports'    => array( 'title' ),
+			'public'             => true,
+			'publicly_queryable' => false,
+			'has_archive'        => true,
+			'rewrite'            => array( 'slug' => 'clients' ),
+			'menu_icon'          => 'dashicons-heart',
+			'supports'           => array( 'title' ),
 		)
 	);
 }
@@ -91,6 +92,16 @@ function bloom_client_add_meta_boxes() {
 		'bloom_client_insurance_metabox',
 		'bloom-client',
 		'advanced',
+		'default'
+	);
+
+	// Session Quicklinks.
+	add_meta_box(
+		'bloom_client_session_quicklinks_metabox',
+		'Sessions',
+		'bloom_client_session_quicklinks_metabox',
+		'bloom-client',
+		'side',
 		'default'
 	);
 }
@@ -397,6 +408,58 @@ function bloom_client_insurance_metabox( $post ) {
 		</tr>
 	</table>
 	<?php
+}
+
+
+/**
+ * Client Sessions Quicklinks metabox.
+ * @param $post
+ */
+function bloom_client_session_quicklinks_metabox( $post ) {
+	// No nonce needed, this won't contain inputs.
+	$client_term = get_term_by( 'name', $post->ID, '_bloom-client' );
+	if ( empty( $client_term ) ) {
+		echo '<p><em>This client must be saved before Sessions can be associated.</em></p>';
+		return;
+	}
+
+	$sessions = new WP_Query(
+		array(
+			'post_type'      => 'bloom-session',
+			'post_status'    => 'publish',
+			'orderby'        => 'meta_value',
+			'meta_key'       => 'session_date',
+			'posts_per_page' => 8,
+			'no_found_rows'  => true,
+			'fields'         => 'ids',
+			'tax_query'      => array(
+				array(
+					'taxonomy' => '_bloom-client',
+					'field' => 'name',
+					'terms' => $post->ID,
+				),
+			),
+		)
+	);
+
+	if ( $sessions->have_posts() ) :
+		foreach ( $sessions->posts as $session_id ) :
+			$date = get_post_meta( $session_id, 'session_date', true );
+			printf(
+				'<a href="%1$s">%2$s</a><br>',
+				esc_url( get_edit_post_link( $session_id, '&' ) ),
+				esc_html( $date )
+			);
+		endforeach;
+	else :
+		echo '<p><em>No sessions found</em></p>';
+	endif;
+
+	printf(
+		'<p><a href="%1$s">All sessions</a> | <a href="%2$s">New session</a>',
+		esc_url( admin_url( "/edit.php?post_type=bloom-session&_bloom-client={$post->ID}" ) ),
+		esc_url( admin_url( "/post-new.php?post_type=bloom-session&bcid={$post->ID}" ) )
+	);
 }
 
 /**
