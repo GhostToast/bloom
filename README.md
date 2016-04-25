@@ -5,7 +5,7 @@ This plugin aims to turn WordPress into a management tool for a therapy office. 
 
 Currently there is no front end, as this is mostly for keeping track of client sessions and (manually) insurance payment status.  
 
-This software is not intended to meet HIPAA compliance and should probably not used on a public-facing website! It may, however, be compliant if ran on a local WordPress installation or on a HIPAA-compliant data center with limited access. This software is offered as-is without warranty. I assume no liability for any HIPAA or confidentiality related nonsense you may or may not get yourself into.
+This software is not intended to meet HIPAA compliance and should probably not be used on a public-facing website! It may, however, be compliant if ran on a local WordPress installation on an encrypted computer or on a HIPAA-compliant data center with limited access. This software is offered as-is without any warranty. I assume no liability for any HIPAA or confidentiality related issues. In other words: use at your own risk.
 
 ### Roadmap
 * More client-based reporting such as...
