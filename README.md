@@ -1,5 +1,5 @@
 # Bloom
-## Client contact and billing history WordPress mu-plugin
+## Client contact and billing history WordPress plugin
 
 This plugin aims to turn WordPress into a management tool for a therapy office. There are two post types: Clients and Sessions, which may be related via a one to many relationship (a client has many sessions).  
 
