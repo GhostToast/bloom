@@ -160,7 +160,7 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_phone_1">Phone:<br><span style="font-weight:normal;font-style:italic;">Required</span></label></th>
 			<td>
 				<div>
-					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" required/>
+					<input type="text" class="regular-text" name="client_phone_1" value="<?php echo esc_html( $client_phone_1 ); ?>" required autocomplete="off" />
 				</div>
 			</td>
 		</tr>
