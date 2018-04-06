@@ -184,7 +184,7 @@ function bloom_client_information_metabox( $post ) {
 			<th scope="row" valign="top"><label for="client_dob">Date of Birth:</label></th>
 			<td>
 				<div>
-					<input type="date" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" autocomplete="off" />
+					<input type="text" class="regular-text" name="client_dob" value="<?php echo esc_html( $client_dob ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>
@@ -384,7 +384,7 @@ function bloom_client_insurance_metabox( $post ) {
 			<th scope="row" valign="top"><label for="insurance_policy_holder_dob">Insurance Policy Holder Date of Birth:</label></th>
 			<td>
 				<div>
-					<input type="date" class="regular-text" name="insurance_policy_holder_dob" value="<?php echo esc_html( $insurance_policy_holder_dob ); ?>" autocomplete="off" />
+					<input type="text" class="regular-text" name="insurance_policy_holder_dob" value="<?php echo esc_html( $insurance_policy_holder_dob ); ?>" autocomplete="off" />
 				</div>
 			</td>
 		</tr>

@@ -98,7 +98,7 @@ function bloom_session_details_metabox( $post ) {
 			<th scope="row" valign="top"><label for="session_date">Session Date:<br><span style="font-weight:normal;font-style:italic;">Required</span></label></th>
 			<td>
 				<div>
-					<input type="date" class="regular-text js-session-title" name="session_date" id="session_date" value="<?php echo esc_html( $session_date ); ?>" autocomplete="off" required />
+					<input type="text" class="regular-text js-session-title" name="session_date" id="session_date" value="<?php echo esc_html( $session_date ); ?>" autocomplete="off" required />
 				</div>
 			</td>
 		</tr>
